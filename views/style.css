@@ -11,13 +11,18 @@ body {
   background-color: #202225;
 }
 
+.selection-title {
+  font-size: 30px;
+  margin-left: 10px;
+  margin-top: 60px;
+}
+
 .bots {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   width: 100%;
   justify-content: center;
-  margin-top: 60px;
 }
 
 .bot-card {
@@ -29,23 +34,48 @@ body {
   margin-top: 20px;
   border: 1px solid black;
   border-radius: 5px;
+  overflow: hidden;
 }
 
 .bot-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: 0.5s ease-out;
 }
 
 .bot-card span {
   position: absolute;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   background-color: rgba(32,34,37,.6);
   bottom: 0px;
   height: 40px;
   width: 100%;
-  justify-content: center;
-  align-items: center;
+  transition: 0.5s ease-in;
+  text-align: center;
+}
+
+.bot-card:hover > img {
+  -webkit-filter: blur(4px);
+  -moz-filter: blur(4px);
+  -o-filter: blur(4px);
+  -ms-filter: blur(4px);
+  filter: blur(4px);
+  transition: 0.5s ease-in;
+}
+
+.bot-card:hover > span {
+  height: 100%;
+  transition: 0.5s ease-out;
+}
+
+.bot-card:hover > span::after {
+  content: '\a' attr(data-description);
+  white-space: pre-wrap;
+  margin: 10px;
 }
 
 a, a:visited, a:link, a:active {
