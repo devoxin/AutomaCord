@@ -17,12 +17,18 @@ body {
   margin-top: 60px;
 }
 
+.bots-wrapper {
+  display: flex;
+  text-align: center;
+  width: 100%;
+  justify-items: center;
+}
+
 .bots {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  width: 100%;
-  justify-content: center;
+
 }
 
 .bot-card {
