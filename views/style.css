@@ -1,0 +1,48 @@
+body {
+  margin: 0px;
+  background-color: #2F3136;
+  font-family: 'Roboto', sans-serif;
+  color: #dcddde;
+}
+
+.header {
+  width: 100%;
+  height: 60px;
+  background-color: #202225;
+}
+
+.bots {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  margin-top: 85px;
+}
+
+.bot-card {
+  position: relative;
+  background-color: #be2f2f;
+  width: 300px;
+  height: 210px;
+  margin-right: 15px;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+.bot-card img {
+  background-color: #202225;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bot-card span {
+  position: absolute;
+  display: flex;
+  background-color: rgba(32,34,37,.6);
+  bottom: 0px;
+  height: 40px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
