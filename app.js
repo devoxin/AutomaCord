@@ -2,7 +2,7 @@ const { Client } = require('eris');
 const config = require('./config');
 
 class Automa extends Client {
-  constructor(token, clientOptions) {
+  constructor (token, clientOptions) {
     super(token, clientOptions);
 
     this.webServer = require('./server');
@@ -10,7 +10,7 @@ class Automa extends Client {
 
   start () {
     this.webServer.start();
-    client.connect();
+    this.connect();
   }
 }
 
@@ -21,9 +21,9 @@ bot.on('messageCreate', (msg) => {
     return;
   }
 
-  const [command, ...args] = msg.content.slice(config.bot.prefix).split(' ');
+  const [command, ...args] = msg.content.slice(config.bot.prefix.length).split(' ');
 
-  if (command === 'ping') {
+  if ('ping' === command) {
     msg.channel.createMessage('ponk :ping_pong:');
   }
 });

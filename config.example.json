@@ -1,0 +1,17 @@
+{
+    "bot": {
+        "token": "",
+        "prefix": "!"
+    },
+    "rethink": {
+        "db": "automacord"
+    },
+    "web": {
+        "port": 8080,
+        "domain": ""
+    },
+    "discord": {
+        "clientId": "",
+        "clientSecret": ""
+    }
+}
