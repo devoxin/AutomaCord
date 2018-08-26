@@ -78,7 +78,7 @@ body {
   transition: 0.5s ease-out;
 }
 
-.bot-card:hover > span::after {
+.bot-card:not(:last-child):hover > span::after {
   content: '\a' attr(data-description);
   white-space: pre-wrap;
   margin: 10px;
