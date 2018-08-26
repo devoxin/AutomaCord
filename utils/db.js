@@ -4,7 +4,7 @@ const r = require('rethinkdbdash');
 (async function setup () {
   const { db } = config.rethink;
   const session = r();
-  
+
   if (!session.dbList().contains(db)) {
     await session.dbCreate(db);
   }
