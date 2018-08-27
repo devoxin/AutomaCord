@@ -14,6 +14,10 @@ class Automa extends Client {
   }
 
   fetchUser (userId) {
+    if (!userId) {
+      return null;
+    }
+
     return this.users.get(userId) || this.getRESTUser(userId).catch(() => null);
   }
 
