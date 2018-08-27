@@ -22,34 +22,34 @@ class Route {
 
     router.post('/add', async (req, res) => {
       if (!req.body || !(req.body instanceof Object)) {
-        return res.render('error', { error: 'Malformed payload' });
+        return res.render('error', { error: 'Malformed payload', shouldRetry: true });
       }
 
       const validatePayload = ['clientId', 'prefix', 'shortDesc', 'longDesc'].filter(field => !Object.keys(req.body).includes(field));
 
       if (0 < validatePayload.length) {
-        return res.render('error', { error: `Malformed payload: missing fields ${validatePayload.join(', ')}` });
+        return res.render('error', { error: `Malformed payload: missing fields ${validatePayload.join(', ')}`, shouldRetry: true });
       }
 
       const { clientId, prefix, shortDesc, longDesc } = req.body;
 
       if (!/[0-9]{17,21}/.test(clientId)) {
-        return res.render('error', { error: 'Malformed payload: clientId must only consist of numbers and be 17-21 characters in length ' });
+        return res.render('error', { error: 'Malformed payload: clientId must only consist of numbers and be 17-21 characters in length', shouldRetry: true });
       }
 
       if (1 > prefix.length) {
-        return res.render('error', { 'error': 'Malformed payload: prefix may not be shorter than 1 character' });
+        return res.render('error', { 'error': 'Malformed payload: prefix may not be shorter than 1 character', shouldRetry: true });
       }
 
       if (150 < shortDesc.length) {
-        return res.render('error', { 'error': 'Malformed payload: shortDesc must not be longer than 150 characters' });
+        return res.render('error', { 'error': 'Malformed payload: shortDesc must not be longer than 150 characters', shouldRetry: true });
       }
 
       const user = await bot.getRESTUser(clientId)
         .catch(() => null);
 
       if (!user) {
-        return res.render('error', { 'error': 'Unable to find information related to the clientId' });
+        return res.render('error', { 'error': 'Unable to find information related to the clientId', shouldRetry: true });
       }
 
       if (await db.table('bots').get(clientId).coerceTo('bool')) {
@@ -57,7 +57,7 @@ class Route {
       }
 
       if (!user.bot) {
-        return res.render('error', { 'error': 'The specified clientId is not associated with a bot' });
+        return res.render('error', { 'error': 'The specified clientId is not associated with a bot', shouldRetry: true });
       }
 
       const owner = await req.user.get();

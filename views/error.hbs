@@ -10,5 +10,10 @@
     <div class="navbar">
     </div>
   </div>
-  <div class="error-message">Error: {{error}}<br><br>Check the information and try again.</div>
+  <div class="error-message">
+    Error: {{error}}
+    {{#if shouldRetry}}
+      <br><br>Check the information and try again.
+    {{/if}}
+  </div>
 </body>
