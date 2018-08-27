@@ -44,15 +44,26 @@ class Route {
           code,
           redirect_uri: this.getRedirectURI(),
           scope: 'identify'
-        });
+        })
+        .catch(() => null);
+
+      if (!auth) {
+        return res.render('error', { 'error': 'Something went wrong during the handshake with Discord' });
+      }
+
+      const currentUser = await snekfetch.get(`${API_URL}/users/@me`)
+        .set('Authorization', `Bearer ${auth.body.access_token}`)
+        .catch(() => null);
+
+      if (!currentUser) {
+        return res.render('error', { 'error': 'Something went wrong during the handshake with Discord' });
+      }
 
       const webToken = await jwt.sign(
         {
-          token: auth.body.access_token,
-        }, config.web.jwtSeed,
-        {
-          expiresIn: auth.body.expires_in - 300
-        }
+          id: currentUser.body.id,
+        },
+        config.web.jwtSeed
       );
 
       if (!webToken) {

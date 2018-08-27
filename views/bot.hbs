@@ -29,19 +29,18 @@
           <a href="https://discordapp.com/oauth2/authorize?client_id={{id}}&scope=bot" target="_blank">
             <button>Invite</button>
           </a>
-          <a href="">
+          {{#if isViewerOwner}}
+          <a href="/edit?id={{id}}">
+            <button>Edit</button>
+          </a>
+          <a href="delete">
             <button>Delete</button>
           </a>
-          <a href="">
-            <button>Approve</button>
-          </a>
-          <a href="">
-            <button>Reject</button>
-          </a>
+          {{/if}}
         </div>
       </div>
       <div class="long-description">
-        {{longDesc}}
+        {{preserveNewlines longDesc}}
       </div>
     </div>
   </div>

@@ -20,7 +20,7 @@
   <div class="body-title">All Bots</div>
   <div class="bots">
     {{#each bots}}
-    <div class="bot-card" onclick="javascript:window.open('https://discordapp.com/oauth2/authorize?client_id={{id}}&scope=bot')">
+    <div class="bot-card" onclick="window.location = '/bot/{{id}}'">
       <img src="https://cdn.discordapp.com/avatars/{{id}}/{{avatar}}.png?size=1024">
       <span data-description="{{shortDesc}}">{{username}}</span>
     </div>

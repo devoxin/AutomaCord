@@ -48,7 +48,6 @@ bot.on('messageCreate', (msg) => {
     try {
       const res = eval(args.join(' '));
       msg.channel.createMessage(require('util').inspect(res, { depth: 0 }) || 'No result');
-      console.log(res);
     } catch (e) {
       msg.channel.createMessage(e.message);
     }

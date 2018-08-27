@@ -1,6 +1,7 @@
 const config = require('./config');
 const fs = require('fs');
 const express = require('express');
+const { Utils, SafeString } = require('handlebars');
 const handlebars = require('express-handlebars');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -14,6 +15,9 @@ class WebServer {
 
     this.webServer.engine('.hbs', handlebars({
       extname: '.hbs',
+      helpers: {
+        preserveNewlines: (content) => new SafeString(Utils.escapeExpression(content).replace(/\r\n|\n|\r/gm, '<br>'))
+      }
     }));
     this.webServer.set('view engine', '.hbs');
     this.webServer.use(express.static('views'));

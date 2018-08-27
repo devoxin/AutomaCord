@@ -18,17 +18,29 @@
     </div>
   </div>
   <div class="add-title">Add your bot!</div>
+  {{#if editing}}
+  <form action="edit" method="POST" class="add-form">
+  {{else}}
   <form action="add" method="POST" class="add-form">
+  {{/if}}
     <a href="https://discordapp.com/developers/applications/" target="_blank">
       <span>Client ID</span>
     </a>
+    {{#if editing}}
+    <input type="text" name="clientId" required pattern="[0-9]{17,21}" value="{{id}}" readonly>
+    {{else}}
     <input type="text" name="clientId" required pattern="[0-9]{17,21}">
+    {{/if}}
     <span>Prefix</span>
-    <input type="text" name="prefix" required pattern=".{1,}">
+    <input type="text" name="prefix" required pattern=".{1,}" value="{{prefix}}">
     <span>Short Description</span>
-    <input type="text" name="shortDesc" maxlength="150">
+    <input type="text" name="shortDesc" maxlength="150" value="{{shortDesc}}">
     <span>Long Description</span>
-    <textarea type="text" name="longDesc"></textarea>
+    <textarea type="text" name="longDesc">{{longDesc}}</textarea>
+    {{#if editing}}
+    <button type="submit">Apply Changes</button>
+    {{else}}
     <button type="submit">Add!</button>
+    {{/if}}
   </form>
 </body>

@@ -160,12 +160,14 @@ a, a:visited, a:link, a:active {
   flex-wrap: wrap;
   height: 300px;
   width: 100%;
+  margin-top: 20px;
 }
 
 .bot-info img {
   border-radius: 100%;
   width: 300px;
   height: 300px;
+  margin-left: 20px;
 }
 
 .bot-subinfo {
@@ -173,7 +175,7 @@ a, a:visited, a:link, a:active {
   flex-direction: column;
   flex-grow: 1;
   margin-top: 10px;
-  margin-left: 10px;
+  margin-left: 20px;
 }
 
 .bot-name {
@@ -188,6 +190,7 @@ a, a:visited, a:link, a:active {
 
 .bot-links button {
   min-width: 75px;
+  margin-top: 5px;
 }
 
 .long-description {

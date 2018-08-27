@@ -3,6 +3,39 @@ const db = require('../utils/db');
 const express = require('express');
 
 class Route {
+  static validateFields (payload, res) {
+    if (!payload || !(payload instanceof Object)) {
+      res.render('error', { 'error': 'Invalid payload', shouldRetry: true });
+      return false;
+    }
+
+    const validatePayload = ['clientId', 'prefix', 'shortDesc', 'longDesc'].filter(field => !Object.keys(payload).includes(field));
+
+    if (0 < validatePayload.length) {
+      res.render('error', { 'error': `Missing fields ${validatePayload.join(', ')}`, shouldRetry: true });
+      return false;
+    }
+
+    const { clientId, prefix, shortDesc } = payload;
+
+    if (!/[0-9]{17,21}/.test(clientId)) {
+      res.render('error', { 'error': 'Client ID must only consist of numbers and be 17-21 characters in length', shouldRetry: true });
+      return false;
+    }
+
+    if (1 > prefix.length) {
+      res.render('error', { 'error': 'Prefix may not be shorter than 1 character', shouldRetry: true });
+      return false;
+    }
+
+    if (150 < shortDesc.length) {
+      res.render('error', { 'error': 'Short description must not be longer than 150 characters', shouldRetry: true });
+      return false;
+    }
+
+    return true;
+  }
+
   static configure (server, bot) {
     const router = express.Router();
     server.use('/', router);
@@ -25,30 +58,13 @@ class Route {
     });
 
     router.post('/add', async (req, res) => {
-      if (!req.body || !(req.body instanceof Object)) {
-        return res.render('error', { 'error': 'Malformed payload', shouldRetry: true });
-      }
+      const validation = this.validateFields(req.body);
 
-      const validatePayload = ['clientId', 'prefix', 'shortDesc', 'longDesc'].filter(field => !Object.keys(req.body).includes(field));
-
-      if (0 < validatePayload.length) {
-        return res.render('error', { 'error': `Malformed payload: missing fields ${validatePayload.join(', ')}`, shouldRetry: true });
+      if (!validation) {
+        return;
       }
 
       const { clientId, prefix, shortDesc, longDesc } = req.body;
-
-      if (!/[0-9]{17,21}/.test(clientId)) {
-        return res.render('error', { 'error': 'Malformed payload: clientId must only consist of numbers and be 17-21 characters in length', shouldRetry: true });
-      }
-
-      if (1 > prefix.length) {
-        return res.render('error', { 'error': 'Malformed payload: prefix may not be shorter than 1 character', shouldRetry: true });
-      }
-
-      if (150 < shortDesc.length) {
-        return res.render('error', { 'error': 'Malformed payload: shortDesc must not be longer than 150 characters', shouldRetry: true });
-      }
-
       const user = await bot.fetchUser(clientId);
 
       if (!user) {
@@ -63,7 +79,7 @@ class Route {
         return res.render('error', { 'error': 'The specified clientId is not associated with a bot', shouldRetry: true });
       }
 
-      const owner = await req.user.get();
+      const owner = await bot.fetchUser(await req.user.id());
 
       await db.table('bots').insert({
         id: clientId,
@@ -77,8 +93,57 @@ class Route {
       });
 
       res.render('added');
-
       bot.createMessage(config.bot.listLogChannel, `${owner.username} added ${user.username}`);
+    });
+
+    router.get('/edit', async (req, res) => {
+      if (!req.query.id) {
+        return res.redirect('/');
+      }
+
+      const bot = await db.table('bots').get(req.query.id);
+
+      if (!bot) {
+        return res.render('error', { 'error': 'No bots found with that ID' });
+      }
+
+      res.render('add', { 'editing': true, ...bot });
+    });
+
+    router.post('/edit', async (req, res) => {
+      if (!await req.user.isAuthenticated()) {
+        return res.redirect('auth/login');
+      }
+
+      const validation = this.validateFields(req.body);
+
+      if (!validation) {
+        return;
+      }
+
+      const { clientId, prefix, shortDesc, longDesc } = req.body;
+      const editedBot = await db.table('bots').get(clientId);
+
+      if (!editedBot) {
+        return res.render('error', { 'error': 'You cannot edit a bot that does not exist' });
+      }
+
+      const owner = await req.user.id();
+
+      if (owner !== editedBot.owner) {
+        return res.render('error', { 'error': 'You are not the owner of that bot' });
+      }
+
+      const ownerUser = await bot.fetchUser(owner);
+
+      await db.table('bots').get(clientId).update({
+        prefix,
+        shortDesc,
+        longDesc
+      });
+
+      res.redirect(`/bot/${clientId}`);
+      bot.createMessage(config.bot.listLogChannel, `${ownerUser.username} edited ${editedBot.username}`);
     });
 
     router.get('/bot/:id', async (req, res) => {
@@ -94,8 +159,9 @@ class Route {
         return res.render('error', { 'error': 'Bot not found! Did you mistype the ID?' });
       }
 
-      const user = await bot.fetchUser(botInfo.owner) || { username: 'Unknown User', discriminator: '0000' };
+      const user = await bot.fetchUser(botInfo.owner) || { username: 'Unknown User', discriminator: '0000', id: botInfo.owner };
       botInfo.owner = user;
+      botInfo.isViewerOwner = user.id === await req.user.id();
 
       res.render('bot', botInfo);
     });
