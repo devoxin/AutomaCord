@@ -1,17 +1,25 @@
 {
     "bot": {
         "token": "",
-        "prefix": "!"
+        "prefix": "!",
+        "listLogChannel": ""
     },
     "rethink": {
         "db": "automacord"
     },
     "web": {
-        "port": 8080,
-        "domain": ""
+        "port": 80,
+        "appendPortToRedirectURI": false,
+        "domain": "http://127.0.0.1",
+        "jwtSeed": ""
     },
     "discord": {
         "clientId": "",
         "clientSecret": ""
+    },
+    "management": {
+        "listGuild": "",
+        "websiteAdminRole": "",
+        "botDeveloperRole": ""
     }
 }

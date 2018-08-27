@@ -8,7 +8,7 @@ const API_URL = 'https://discordapp.com/api/v7';
 
 class Route {
   static getRedirectURI () {
-    if (80 !== config.web.port) {
+    if (80 !== config.web.port && config.web.appendPortToRedirectURI) {
       return `${config.web.domain}:${config.web.port}/auth/handshake`;
     } else {
       return `${config.web.domain}/auth/handshake`;
