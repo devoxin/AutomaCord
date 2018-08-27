@@ -1,6 +1,5 @@
 const config = require('../config');
 const db = require('../utils/db');
-const r = require('rethinkdbdash');
 const express = require('express');
 
 class Route {
@@ -27,19 +26,19 @@ class Route {
 
     router.post('/add', async (req, res) => {
       if (!req.body || !(req.body instanceof Object)) {
-        return res.render('error', { error: 'Malformed payload', shouldRetry: true });
+        return res.render('error', { 'error': 'Malformed payload', shouldRetry: true });
       }
 
       const validatePayload = ['clientId', 'prefix', 'shortDesc', 'longDesc'].filter(field => !Object.keys(req.body).includes(field));
 
       if (0 < validatePayload.length) {
-        return res.render('error', { error: `Malformed payload: missing fields ${validatePayload.join(', ')}`, shouldRetry: true });
+        return res.render('error', { 'error': `Malformed payload: missing fields ${validatePayload.join(', ')}`, shouldRetry: true });
       }
 
       const { clientId, prefix, shortDesc, longDesc } = req.body;
 
       if (!/[0-9]{17,21}/.test(clientId)) {
-        return res.render('error', { error: 'Malformed payload: clientId must only consist of numbers and be 17-21 characters in length', shouldRetry: true });
+        return res.render('error', { 'error': 'Malformed payload: clientId must only consist of numbers and be 17-21 characters in length', shouldRetry: true });
       }
 
       if (1 > prefix.length) {
@@ -50,8 +49,7 @@ class Route {
         return res.render('error', { 'error': 'Malformed payload: shortDesc must not be longer than 150 characters', shouldRetry: true });
       }
 
-      const user = await bot.getRESTUser(clientId)
-        .catch(() => null);
+      const user = await bot.fetchUser(clientId);
 
       if (!user) {
         return res.render('error', { 'error': 'Unable to find information related to the clientId', shouldRetry: true });
@@ -81,6 +79,25 @@ class Route {
       res.render('added');
 
       bot.createMessage(config.bot.listLogChannel, `${owner.username} added ${user.username}`);
+    });
+
+    router.get('/bot/:id', async (req, res) => {
+      const { id } = req.params;
+
+      if (!id) {
+        return res.render('error', { 'error': 'The ID you provided is invalid' });
+      }
+
+      const botInfo = await db.table('bots').get(req.params.id);
+
+      if (!botInfo) {
+        return res.render('error', { 'error': 'Bot not found! Did you mistype the ID?' });
+      }
+
+      const user = await bot.fetchUser(botInfo.owner) || { username: 'Unknown User', discriminator: '0000' };
+      botInfo.owner = user;
+
+      res.render('bot', botInfo);
     });
   }
 }

@@ -1,7 +1,7 @@
 <head>
   <title>AutomaCord</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" type="text/css" href="/style.css">
   <link href="https://fonts.googleapis.com/css?family=Poppins|Roboto" rel="stylesheet">
 </head>
 
@@ -9,12 +9,19 @@
   <div class="navbar">
     <span class="nav-title">AutomaCord</span>
     <div class="nav-options">
-      <span class="nav-option">Home</span>
-      <span class="nav-option">Add Bot</span>
+      <a href="/">
+        <span class="nav-option">Home</span>
+      </a>
+      <a href="add">
+        <span class="nav-option">Add Bot</span>
+      </a>
     </div>
   </div>
   <div class="error-message">
-    Error: {{error}} {{#if shouldRetry}}
-    <br><br>Check the information and try again. {{/if}}
+    Error: {{error}}
+    {{#if shouldRetry}}
+      <br><br>
+      Check the information provided and then try again
+    {{/if}}
   </div>
 </body>

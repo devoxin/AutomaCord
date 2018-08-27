@@ -13,6 +13,10 @@ class Automa extends Client {
     this.webServer = new WebServer(this);
   }
 
+  fetchUser (userId) {
+    return this.users.get(userId) || this.getRESTUser(userId).catch(() => null);
+  }
+
   start () {
     this.webServer.start();
     this.connect();

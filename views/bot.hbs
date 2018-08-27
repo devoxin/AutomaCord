@@ -1,0 +1,41 @@
+<head>
+  <title>AutomaCord</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  <link href="https://fonts.googleapis.com/css?family=Poppins|Roboto" rel="stylesheet">
+</head>
+
+<body>
+  <div class="navbar">
+    <span class="nav-title">AutomaCord</span>
+    <div class="nav-options">
+      <a href="/">
+        <span class="nav-option">Home</span>
+      </a>
+      <a href="add">
+        <span class="nav-option">Add Bot</span>
+      </a>
+    </div>
+  </div>
+  <div class="bot-page">
+    <div class="bot-info">
+      <img src="https://cdn.discordapp.com/avatars/{{id}}/{{avatar}}.png?size=1024">
+      <div class="bot-subinfo">
+        <span class="bot-name">{{username}}</span>
+        <span class="bot-label">Owner: {{owner.username}}#{{owner.discriminator}}</span>
+        <span class="bot-label">Prefix: {{prefix}}</span>
+        <span class="bot-label">{{shortDesc}}</span>
+        <div class="bot-links">
+          <button>Invite</button>
+          <button>Delete</button>
+          <!--<a href="https://discordapp.com/oauth2/authorize?client_id={{id}}&scope=bot" target="_blank">
+            <button>Invite</button>
+          </a>
+          <a href="">
+            <button>test</button>
+          </a>-->
+        </div>
+      </div>
+    </div>
+  </div>
+</body>

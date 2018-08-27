@@ -5,6 +5,26 @@ body {
   color: #dcddde;
 }
 
+button {
+  background-color: #202225;
+  border: 1px solid black;
+  outline: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.5s ease-out;
+}
+
+button:hover {
+  border: 1px solid white;
+  transition: 0.5s ease-in;
+}
+
+a, a:visited, a:link, a:active {
+  text-decoration: none;
+  color: inherit;
+}
+
 .navbar {
   display: flex;
   align-items: center;
@@ -18,6 +38,16 @@ body {
   font-weight: 600;
   font-size: 25px;
   margin-left: 20px;
+}
+
+.nav-options a {
+  color: inherit;
+  transition: 0.25s ease-out;
+}
+
+.nav-options a:hover {
+  color: #1E90FF;
+  transition: 0.25s ease-in;
 }
 
 .nav-option {
@@ -92,11 +122,6 @@ body {
   margin: 10px;
 }
 
-a, a:visited, a:link, a:active {
-  text-decoration: none;
-  color: inherit;
-}
-
 .add-title, .error-message {
   font-size: 30px;
   margin-top: 30px;
@@ -124,22 +149,47 @@ a, a:visited, a:link, a:active {
   min-height: 100px;
 }
 
-.add-form button {
-  background-color: #202225;
-  border: 1px solid black;
-  outline: none;
-  color: white;
-  font-size: 20px;
-  cursor: pointer;
-  transition: 0.5s ease-out;
-}
-
-.add-form button:hover {
-  border: 1px solid white;
-  transition: 0.5s ease-in;
-}
-
 .addform a, .add-form a:visited, .add-form a:link, .add-form a:active {
   text-decoration: underline;
   color: #1E90FF;
+}
+
+.bot-info {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  height: 300px;
+  width: 100%;
+}
+
+.bot-info img {
+  border-radius: 100%;
+  width: 300px;
+  height: 300px;
+}
+
+.bot-subinfo {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.bot-name {
+  font-size: 60px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.bot-label {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.bot-links {
+  background-color: #1E90FF;
+}
+
+.bot-links button {
+  width: 50px !important;
+  margin-right: 10px;
 }

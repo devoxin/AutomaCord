@@ -4,7 +4,7 @@ const r = require('rethinkdbdash')({
 });
 
 (async function setup () {
-  ['users', 'bots'].map(async (table) => {
+  ['users', 'bots', 'votes'].map(async (table) => {
     if (!await r.tableList().contains(table)) {
       await r.tableCreate(table);
     }
