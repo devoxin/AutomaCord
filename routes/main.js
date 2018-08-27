@@ -93,7 +93,7 @@ class Route {
       });
 
       res.render('added');
-      bot.createMessage(config.bot.listLogChannel, `${owner.username} added ${user.username}`);
+      bot.createMessage(config.bot.listLogChannel, `${owner.username} added ${user.username} (<@${user.id}>)`);
     });
 
     router.get('/edit', async (req, res) => {
@@ -143,7 +143,7 @@ class Route {
       });
 
       res.redirect(`/bot/${clientId}`);
-      bot.createMessage(config.bot.listLogChannel, `${ownerUser.username} edited ${editedBot.username}`);
+      bot.createMessage(config.bot.listLogChannel, `${ownerUser.username} edited ${editedBot.username} (<@${editedBot.id}>)`);
     });
 
     router.get('/bot/:id', async (req, res) => {
