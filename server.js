@@ -33,7 +33,7 @@ class WebServer {
     for (const route of routes) {
       const r = require(`./routes/${route}`);
       r.configure(this.webServer, this.bot);
-      console.debug(`Loaded route ${  route}`);
+      console.debug(`Loaded route ${route}`);
     }
   }
 

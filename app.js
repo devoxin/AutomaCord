@@ -5,6 +5,7 @@ const config = require('./config');
 class Automa extends Client {
   constructor (token, clientOptions) {
     const options = Object.assign({
+      getAllUsers: true,
       restMode: true
     }, clientOptions);
 
@@ -21,9 +22,16 @@ class Automa extends Client {
     return this.users.get(userId) || this.getRESTUser(userId).catch(() => null);
   }
 
+  get listGuild () {
+    return this.guilds.get(config.management.listGuild);
+  }
+
   start () {
-    this.webServer.start();
     this.connect();
+
+    this.once('ready', () => {
+      this.webServer.start();
+    });
   }
 }
 

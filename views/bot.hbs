@@ -29,13 +29,23 @@
           <a href="https://discordapp.com/oauth2/authorize?client_id={{id}}&scope=bot" target="_blank">
             <button>Invite</button>
           </a>
-          {{#if isViewerOwner}}
+          {{#if canManageBot}}
           <a href="/edit?id={{id}}">
             <button>Edit</button>
           </a>
-          <a href="delete">
+          <a href="/delete?id={{id}}">
             <button>Delete</button>
           </a>
+          {{/if}}
+          {{#if isWebAdmin}}
+            {{#unless approved}}
+            <a href="/approve?id={{id}}">
+              <button>Approve</button>
+            </a>
+            <a href="/reject?id={{id}}">
+              <button>Reject</button>
+            </a>
+            {{/unless}}
           {{/if}}
         </div>
       </div>
