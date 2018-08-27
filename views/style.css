@@ -5,10 +5,23 @@ body {
   color: #dcddde;
 }
 
-.header {
-  width: 100%;
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   height: 60px;
   background-color: #202225;
+}
+
+.nav-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 25px;
+  margin-left: 20px;
+}
+
+.nav-option {
+  margin-right: 20px;
 }
 
 .body-title {

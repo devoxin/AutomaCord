@@ -31,6 +31,11 @@ bot.on('messageCreate', (msg) => {
   if ('ping' === command) {
     msg.channel.createMessage('ponk :ping_pong:');
   }
+
+  if ('eval' === command) {
+    const res = eval(args.join(' '));
+    msg.channel.createMessage(require('util').inspect(res) || 'No result');
+  }
 });
 
 bot.start();

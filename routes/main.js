@@ -1,5 +1,6 @@
 const config = require('../config');
 const db = require('../utils/db');
+const r = require('rethinkdbdash');
 const express = require('express');
 
 class Route {
@@ -9,7 +10,11 @@ class Route {
 
     router.get('/', async (req, res) => {
       const bots = await db.table('bots');
-      res.render('index', { bots });
+      bots.forEach(bot => bot.seed = Math.random());
+
+      const randomized = bots.sort((a, b) => a.seed - b.seed);
+
+      res.render('index', { bots: randomized });
     });
 
     router.get('/add', async (req, res) => {
