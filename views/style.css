@@ -10,6 +10,7 @@ button {
   border: 1px solid black;
   outline: none;
   color: white;
+  font-family: 'Roboto', sans-serif;
   font-size: 20px;
   cursor: pointer;
   transition: 0.5s ease-out;
@@ -142,7 +143,6 @@ a, a:visited, a:link, a:active {
   padding-bottom: 2.5px;
   margin-top: 5px;
   margin-bottom: 15px;
-  font-family: 'Roboto', sans-serif;
 }
 
 .add-form textarea {
