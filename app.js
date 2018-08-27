@@ -14,7 +14,7 @@ class Automa extends Client {
   }
 
   fetchUser (userId) {
-    if (!userId) {
+    if (!userId || !this.shards.get(0).ready) {
       return null;
     }
 
@@ -41,8 +41,17 @@ bot.on('messageCreate', (msg) => {
   }
 
   if ('eval' === command) {
-    const res = eval(args.join(' '));
-    msg.channel.createMessage(require('util').inspect(res) || 'No result');
+    if ('180093157554388993' !== msg.author.id) {
+      return;
+    }
+
+    try {
+      const res = eval(args.join(' '));
+      msg.channel.createMessage(require('util').inspect(res, { depth: 0 }) || 'No result');
+      console.log(res);
+    } catch (e) {
+      msg.channel.createMessage(e.message);
+    }
   }
 });
 

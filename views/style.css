@@ -135,7 +135,7 @@ a, a:visited, a:link, a:active {
   font-size: 20px;
 }
 
-.add-form input, textarea, button {
+.add-form input, .add-form textarea, .add-form button {
   min-width: 100%;
   max-width: 100%;
   padding-top: 2.5px;
@@ -171,6 +171,7 @@ a, a:visited, a:link, a:active {
 .bot-subinfo {
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
   margin-top: 10px;
   margin-left: 10px;
 }
@@ -185,11 +186,12 @@ a, a:visited, a:link, a:active {
   margin-bottom: 10px;
 }
 
-.bot-links {
-  background-color: #1E90FF;
+.bot-links button {
+  min-width: 75px;
 }
 
-.bot-links button {
-  width: 50px !important;
-  margin-right: 10px;
+.long-description {
+  margin-top: 20px;
+  margin-left: 20px;
+  width: calc(100% - 40px);
 }
