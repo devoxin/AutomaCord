@@ -7,6 +7,14 @@ const BASE_URL = 'https://discordapp.com/api/oauth2/authorize?client_id={clienti
 const API_URL = 'https://discordapp.com/api/v7';
 
 class Route {
+  static getRedirectURI () {
+    if (80 !== config.web.port) {
+      return `${config.web.domain}:${config.web.port}/auth/handshake`;
+    } else {
+      return `${config.web.domain}/auth/handshake`;
+    }
+  }
+
   static configure (server, bot) {
     const router = express.Router();
     server.use('/auth', router);
@@ -14,7 +22,7 @@ class Route {
     router.get('/login', (req, res) => {
       const compiled = BASE_URL
         .replace('{clientid}', config.discord.clientId)
-        .replace('{redirect}', encodeURIComponent(`${config.web.domain}/auth/handshake`));
+        .replace('{redirect}', encodeURIComponent(this.getRedirectURI()));
 
       res.redirect(compiled);
     });
@@ -34,7 +42,7 @@ class Route {
           client_secret: config.discord.clientSecret,
           grant_type: 'authorization_code',
           code,
-          redirect_uri: `${config.web.domain}/auth/handshake`,
+          redirect_uri: this.getRedirectURI(),
           scope: 'identify'
         });
 
