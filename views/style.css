@@ -11,24 +11,18 @@ body {
   background-color: #202225;
 }
 
-.selection-title {
+.body-title {
   font-size: 30px;
-  margin-left: 10px;
+  margin-left: 5%;
   margin-top: 60px;
-}
-
-.bots-wrapper {
-  display: flex;
-  text-align: center;
-  width: 100%;
-  justify-items: center;
 }
 
 .bots {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-
+  width: 90%;
+  margin-left: 5%;
 }
 
 .bot-card {
@@ -36,11 +30,12 @@ body {
   position: relative;
   width: 300px;
   height: 210px;
-  margin-right: 15px;
+  margin-right: 7.5px;
   margin-top: 20px;
   border: 1px solid black;
   border-radius: 5px;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .bot-card img {
@@ -70,7 +65,7 @@ body {
   -o-filter: blur(4px);
   -ms-filter: blur(4px);
   filter: blur(4px);
-  transition: 0.5s ease-in;
+  transition: 0.5s ease-out;
 }
 
 .bot-card:hover > span {
@@ -87,4 +82,51 @@ body {
 a, a:visited, a:link, a:active {
   text-decoration: none;
   color: inherit;
+}
+
+.add-title {
+  font-size: 30px;
+  margin-top: 30px;
+  margin-left: 5%;
+}
+
+.add-form {
+  width: 90%;
+  margin-left: 5%;
+  margin-top: 10px;
+  font-size: 20px;
+}
+
+.add-form input, textarea, button {
+  min-width: 100%;
+  max-width: 100%;
+  padding-top: 2.5px;
+  padding-bottom: 2.5px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.add-form textarea {
+  min-height: 100px;
+}
+
+.add-form button {
+  background-color: #202225;
+  border: 1px solid black;
+  outline: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.5s ease-out;
+}
+
+.add-form button:hover {
+  border: 1px solid white;
+  transition: 0.5s ease-in;
+}
+
+.addform a, .add-form a:visited, .add-form a:link, .add-form a:active {
+  text-decoration: underline;
+  color: #1E90FF;
 }

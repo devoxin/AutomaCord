@@ -15,6 +15,8 @@ class WebServer {
     }));
     this.webServer.set('view engine', '.hbs');
     this.webServer.use(express.static('views'));
+    this.webServer.use(bodyParser.urlencoded({ extended: true }));
+    this.webServer.use(bodyParser.json());
   }
 
   loadRoutes () {
@@ -22,9 +24,8 @@ class WebServer {
 
     for (const route of routes) {
       const r = require(`./routes/${route}`);
-      this.webServer.use(r.path, r.router);
-
-      console.debug('Loaded route ' + r.path);
+      r.configure(this.webServer, this.bot);
+      console.debug('Loaded route ' + route);
     }
   }
 

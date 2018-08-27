@@ -4,9 +4,13 @@ const config = require('./config');
 
 class Automa extends Client {
   constructor (token, clientOptions) {
-    super(token, clientOptions);
+    const options = Object.assign({
+      restMode: true
+    }, clientOptions);
 
-    this.webServer = new WebServer();
+    super(token, options);
+
+    this.webServer = new WebServer(this);
   }
 
   start () {

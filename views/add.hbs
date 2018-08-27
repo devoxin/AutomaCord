@@ -1,0 +1,27 @@
+<head>
+  <title>AutomaCord</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+</head>
+
+<body>
+  <div class="header">
+    <div class="navbar">
+    </div>
+  </div>
+  <div class="add-title">Add your bot!</div>
+  <form action="add" method="POST" class="add-form">
+    <a href="https://discordapp.com/developers/applications/" target="_blank">
+      <span>Client ID</span>
+    </a>
+    <input type="text" name="clientId" required pattern="[0-9]{17,21}">
+    <span>Prefix</span>
+    <input type="text" name="prefix" required pattern=".{1,}">
+    <span>Short Description</span>
+    <input type="text" name="shortDesc" maxlength="150">
+    <span>Long Description</span>
+    <textarea type="text" name="longDesc"></textarea>
+    <button type="submit">Add!</button>
+  </div>
+</body>
