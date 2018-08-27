@@ -52,6 +52,10 @@ class Route {
         return res.render('error', { 'error': 'Unable to find information related to the clientId' });
       }
 
+      if (await db.table('bots').get(clientId).coerceTo('bool')) {
+        return res.render('error', { 'error': `${user.username} is already listed!` });
+      }
+
       if (!user.bot) {
         return res.render('error', { 'error': 'The specified clientId is not associated with a bot' });
       }
