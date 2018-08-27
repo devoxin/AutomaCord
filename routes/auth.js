@@ -1,35 +1,57 @@
 const config = require('../config');
 const express = require('express');
+const snekfetch = require('snekfetch');
+const jwt = require('../utils/jwt');
+
+const BASE_URL = 'https://discordapp.com/api/oauth2/authorize?client_id={clientid}&redirect_uri={redirect}&response_type=code&scope=identify';
+const API_URL = 'https://discordapp.com/api/v7';
 
 class Route {
   static configure (server, bot) {
     const router = express.Router();
     server.use('/auth', router);
 
-    router.get('/', (req, res) => {
-      res.render('index');
+    router.get('/login', (req, res) => {
+      const compiled = BASE_URL
+        .replace('{clientid}', config.discord.clientId)
+        .replace('{redirect}', encodeURIComponent(`${config.web.domain}/auth/handshake`));
+
+      res.redirect(compiled);
     });
 
-    router.get('/add', (req, res) => {
-      res.render('add');
-    });
+    router.get('/handshake', async (req, res) => {
+      const { code } = req.query;
 
-    router.post('/add', (req, res) => {
-      if (!req.body || !(req.body instanceof Object)) {
-        return res.status(400).json({ 'error': 'Malformed payload' });
+      if (!code) {
+        return res.render('error', { 'error': 'Invalid code' });
       }
 
-      const validatePayload = ['clientId', 'prefix', 'shortDesc', 'longDesc'].filter(field => !Object.keys(req.body).includes(field));
+      const auth = await snekfetch.post(`${API_URL}/oauth2/token`)
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .set('User-Agent', 'AutomaCord (https://github.com/Devoxin/AutomaCord, v1)')
+        .query({
+          client_id: config.discord.clientId,
+          client_secret: config.discord.clientSecret,
+          grant_type: 'authorization_code',
+          code,
+          redirect_uri: `${config.web.domain}/auth/handshake`,
+          scope: 'identify'
+        });
 
-      if (0 < validatePayload.length) {
-        return res.status(400).json({ 'error': `Malformed payload: missing fields ${validatePayload.join(', ')}` });
+      const webToken = await jwt.sign(
+        {
+          token: auth.body.access_token,
+        }, config.web.jwtSeed,
+        {
+          expiresIn: auth.body.expires_in - 300
+        }
+      );
+
+      if (!webToken) {
+        return res.render('error', { 'error': 'Something went wrong during the handshake with Discord' });
       }
 
-      const { clientId, prefix, shortDesc, longDesc } = req.body;
-
-      console.log(clientId, prefix, shortDesc, longDesc);
-
-      bot.createMessage(config.bot.listLogChannel, `Some fuck just added a bot with client id ${clientId}`);
+      res.cookie('automacord', webToken).redirect('/');
     });
   }
 }

@@ -17,6 +17,10 @@ class Route {
     });
 
     router.post('/add', async (req, res) => {
+      if (!req.user.isAuthenticated) {
+        return res.redirect('auth/login');
+      }
+
       if (!req.body || !(req.body instanceof Object)) {
         return res.render('error', { error: 'Malformed payload' });
       }
@@ -52,7 +56,7 @@ class Route {
         return res.render('error', { 'error': 'The specified clientId is not associated with a bot' });
       }
 
-      res.render('added');
+      const owner = await req.user.get();
 
       await db.table('bots').insert({
         id: clientId,
@@ -61,10 +65,13 @@ class Route {
         longDesc,
         username: user.username,
         avatar: user.avatar,
-        discriminator: user.discriminator
+        discriminator: user.discriminator,
+        owner: owner.id
       });
 
-      bot.createMessage(config.bot.listLogChannel, `Client ID: ${clientId}\nPrefix: ${prefix}\nShort Desc: ${shortDesc}\nLong Desc: ${longDesc}`);
+      res.render('added');
+
+      bot.createMessage(config.bot.listLogChannel, `${owner.username} added ${user.username}`);
     });
   }
 }

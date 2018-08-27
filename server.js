@@ -3,6 +3,8 @@ const fs = require('fs');
 const express = require('express');
 const handlebars = require('express-handlebars');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const getUser = require('./utils/getUser');
 
 
 class WebServer {
@@ -17,6 +19,8 @@ class WebServer {
     this.webServer.use(express.static('views'));
     this.webServer.use(bodyParser.urlencoded({ extended: true }));
     this.webServer.use(bodyParser.json());
+    this.webServer.use(cookieParser());
+    this.webServer.use(getUser);
   }
 
   loadRoutes () {
