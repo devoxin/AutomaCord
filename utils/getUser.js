@@ -5,10 +5,6 @@ const snekfetch = require('snekfetch');
 function getUser (req, res, next) {
   const { automacord } = req.cookies;
 
-  if (!automacord) {
-    return next();
-  }
-
   req.user = {
     isAuthenticated: () => jwt.isValid(automacord, config.web.jwtSeed),
     get: async () => {

@@ -12,15 +12,15 @@ class Route {
       res.render('index', { bots });
     });
 
-    router.get('/add', (req, res) => {
+    router.get('/add', async (req, res) => {
+      if (!await req.user.isAuthenticated()) {
+        return res.redirect('auth/login');
+      }
+
       res.render('add');
     });
 
     router.post('/add', async (req, res) => {
-      if (!req.user.isAuthenticated) {
-        return res.redirect('auth/login');
-      }
-
       if (!req.body || !(req.body instanceof Object)) {
         return res.render('error', { error: 'Malformed payload' });
       }
