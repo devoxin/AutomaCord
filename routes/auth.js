@@ -9,9 +9,9 @@ class Route {
     router.get('/', (req, res) => {
       res.render('index');
     });
-    
+
     router.get('/add', (req, res) => {
-      res.render('add')
+      res.render('add');
     });
 
     router.post('/add', (req, res) => {
@@ -21,7 +21,7 @@ class Route {
 
       const validatePayload = ['clientId', 'prefix', 'shortDesc', 'longDesc'].filter(field => !Object.keys(req.body).includes(field));
 
-      if (validatePayload.length > 0) {
+      if (0 < validatePayload.length) {
         return res.status(400).json({ 'error': `Malformed payload: missing fields ${validatePayload.join(', ')}` });
       }
 

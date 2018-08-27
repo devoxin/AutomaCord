@@ -84,7 +84,7 @@ a, a:visited, a:link, a:active {
   color: inherit;
 }
 
-.add-title {
+.add-title, .error-message {
   font-size: 30px;
   margin-top: 30px;
   margin-left: 5%;

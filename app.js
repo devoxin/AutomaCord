@@ -1,5 +1,5 @@
 const { Client } = require('eris');
-const WebServer = require('./server')
+const WebServer = require('./server');
 const config = require('./config');
 
 class Automa extends Client {
