@@ -171,8 +171,8 @@ class Route {
         || { username: 'Unknown User', discriminator: '0000', id: botInfo.owner };
 
       botInfo.owner = botOwner;
-      botInfo.isWebAdmin = currentUser.roles.some(id => id === config.management.websiteAdminRole);
-      botInfo.canManageBot = botOwner.id === currentId || botInfo.isWebAdmin;
+      botInfo.isWebAdmin = currentUser && currentUser.roles.some(id => id === config.management.websiteAdminRole);
+      botInfo.canManageBot = currentId && botOwner.id === currentId || botInfo.isWebAdmin;
 
       res.render('bot', botInfo);
     });
