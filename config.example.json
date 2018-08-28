@@ -1,8 +1,7 @@
 {
     "bot": {
         "token": "",
-        "prefix": "!",
-        "listLogChannel": ""
+        "prefix": "!"
     },
     "rethink": {
         "db": "automacord"
@@ -19,6 +18,7 @@
     },
     "management": {
         "listGuild": "",
+        "listLogChannel": "",
         "websiteAdminRole": "",
         "botDeveloperRole": ""
     }

@@ -98,7 +98,7 @@ class Route {
       });
 
       res.render('added');
-      bot.createMessage(config.bot.listLogChannel, `${owner.username} added ${user.username} (<@${user.id}>)`);
+      bot.createMessage(config.management.listLogChannel, `${owner.username} added ${user.username} (<@${user.id}>)`);
     });
 
     router.get('/edit', async (req, res) => {
@@ -148,7 +148,7 @@ class Route {
       });
 
       res.redirect(`/bot/${clientId}`);
-      bot.createMessage(config.bot.listLogChannel, `${ownerUser.username} edited ${editedBot.username} (<@${editedBot.id}>)`);
+      bot.createMessage(config.management.listLogChannel, `${ownerUser.username} edited ${editedBot.username} (<@${editedBot.id}>)`);
     });
 
     router.get('/bot/:id', async (req, res) => {
@@ -209,7 +209,7 @@ class Route {
       await db.table('bots').get(req.query.id).delete();
       res.redirect('/');
 
-      bot.createMessage(config.bot.listLogChannel, `${currentUser ? currentUser.username : `<@${currentId}>`} deleted ${botInfo.username} (<@${botInfo.id}>)`);
+      bot.createMessage(config.management.listLogChannel, `${currentUser ? currentUser.username : `<@${currentId}>`} deleted ${botInfo.username} (<@${botInfo.id}>)`);
     });
 
     router.get('/approve', async (req, res) => {
@@ -244,7 +244,7 @@ class Route {
       }
 
       res.redirect('/');
-      bot.createMessage(config.bot.listLogChannel, `${currentUser.username} approved ${botInfo.username} (<@${botInfo.id}>)`);
+      bot.createMessage(config.management.listLogChannel, `${currentUser.username} approved ${botInfo.username} (<@${botInfo.id}>)`);
     });
 
     router.get('/reject', async (req, res) => {
@@ -276,7 +276,7 @@ class Route {
       }
 
       res.redirect('/');
-      bot.createMessage(config.bot.listLogChannel, `${currentUser.username} rejected ${botInfo.username} (<@${botInfo.id}>)`);
+      bot.createMessage(config.management.listLogChannel, `${currentUser.username} rejected ${botInfo.username} (<@${botInfo.id}>)`);
     });
   }
 }
