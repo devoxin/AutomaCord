@@ -71,7 +71,7 @@ class Route {
       }
 
       res
-        .cookie('automacord', webToken, { httpOnly: false })
+        .cookie('automacord', webToken, { maxAge: 604800000, httpOnly: false })
         .redirect('/');
     });
   }
