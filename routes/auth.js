@@ -70,7 +70,9 @@ class Route {
         return res.render('error', { 'error': 'Something went wrong during the handshake with Discord' });
       }
 
-      res.cookie('automacord', webToken).redirect('/');
+      res
+        .cookie('automacord', webToken, { httpOnly: false })
+        .redirect('/');
     });
   }
 }
