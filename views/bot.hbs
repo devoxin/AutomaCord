@@ -6,20 +6,7 @@
 </head>
 
 <body>
-  <div class="navbar">
-    <span class="nav-title">AutomaCord</span>
-    <div class="nav-options">
-      <a href="/">
-        <span class="nav-option">Home</span>
-      </a>
-      <a href="https://discord.gg/XQT4DEt" target="_blank">
-        <span class="nav-option">Join Server</span>
-      </a>
-      <a href="add">
-        <span class="nav-option">Add Bot</span>
-      </a>
-    </div>
-  </div>
+  {{> navbar}}
   <div class="bot-page">
     <div class="bot-info">
       <img src="https://cdn.discordapp.com/avatars/{{id}}/{{avatar}}.png?size=1024">
@@ -29,7 +16,7 @@
         <span class="bot-label">Prefix: {{prefix}}</span>
         <span class="bot-label">{{shortDesc}}</span>
         <div class="bot-links">
-          <a href="https://discordapp.com/oauth2/authorize?client_id={{id}}&scope=bot" target="_blank">
+          <a href="{{invite}}" target="_blank">
             <button>Invite</button>
           </a>
           {{#if canManageBot}}

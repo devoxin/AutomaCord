@@ -64,7 +64,7 @@ class Route {
         return;
       }
 
-      const { clientId, prefix, shortDesc, longDesc } = req.body;
+      const { clientId, prefix, shortDesc, longDesc, inviteUrl } = req.body;
       const user = await bot.fetchUser(clientId);
 
       if (!user) {
@@ -87,6 +87,7 @@ class Route {
 
       await db.table('bots').insert({
         id: clientId,
+        invite: inviteUrl,
         prefix,
         shortDesc,
         longDesc,
@@ -126,7 +127,7 @@ class Route {
         return;
       }
 
-      const { clientId, prefix, shortDesc, longDesc } = req.body;
+      const { clientId, prefix, shortDesc, longDesc, inviteUrl } = req.body;
       const editedBot = await db.table('bots').get(clientId);
 
       if (!editedBot) {
@@ -142,6 +143,7 @@ class Route {
       const ownerUser = await bot.fetchUser(owner);
 
       await db.table('bots').get(clientId).update({
+        invite: inviteUrl,
         prefix,
         shortDesc,
         longDesc
@@ -170,6 +172,7 @@ class Route {
       const botOwner = await bot.fetchUser(botInfo.owner)
         || { username: 'Unknown User', discriminator: '0000', id: botInfo.owner };
 
+      botInfo.invite = botInfo.invite || `https://discordapp.com/oauth2/authorize?client_id=${botInfo.id}&scope=bot`;
       botInfo.owner = botOwner;
       botInfo.isWebAdmin = currentUser && currentUser.roles.some(id => id === config.management.websiteAdminRole);
       botInfo.canManageBot = currentId && botOwner.id === currentId || botInfo.isWebAdmin;

@@ -6,34 +6,21 @@
 </head>
 
 <body>
-  <div class="navbar">
-    <span class="nav-title">AutomaCord</span>
-    <div class="nav-options">
-      <a href="/">
-        <span class="nav-option">Home</span>
-      </a>
-      <a href="https://discord.gg/XQT4DEt" target="_blank">
-        <span class="nav-option">Join Server</span>
-      </a>
-      <a href="add">
-        <span class="nav-option">Add Bot</span>
-      </a>
-    </div>
-  </div>
+  {{> navbar}}
   <div class="add-title">Add your bot!</div>
   {{#if editing}}
   <form action="edit" method="POST" class="add-form">
   {{else}}
   <form action="add" method="POST" class="add-form">
   {{/if}}
-    <a href="https://discordapp.com/developers/applications/" target="_blank">
-      <span>Client ID</span>
-    </a>
+    <span>User ID (NOT Client ID)</span>
     {{#if editing}}
     <input type="text" name="clientId" required pattern="[0-9]{17,21}" value="{{id}}" readonly>
     {{else}}
     <input type="text" name="clientId" required pattern="[0-9]{17,21}">
     {{/if}}
+    <span>Custom Invite URL</span>
+    <input type="text" name="inviteUrl" placeholder="One will be generated with default permissions if omitted" value="{{invite}}">
     <span>Prefix</span>
     <input type="text" name="prefix" required pattern=".{1,}" value="{{prefix}}">
     <span>Short Description</span>

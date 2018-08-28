@@ -15,6 +15,7 @@ class WebServer {
 
     this.webServer.engine('.hbs', handlebars({
       extname: '.hbs',
+      partialsDir: `${__dirname}/views/partials/`,
       helpers: {
         preserveNewlines: (content) => new SafeString(Utils.escapeExpression(content).replace(/\r\n|\n|\r/gm, '<br>'))
       }
