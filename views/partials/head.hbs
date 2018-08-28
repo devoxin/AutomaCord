@@ -4,14 +4,3 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   <link href="https://fonts.googleapis.com/css?family=Poppins|Roboto" rel="stylesheet">
 </head>
-
-<body>
-  {{> navbar}}
-  <div class="error-message">
-    Error: {{error}}
-    {{#if shouldRetry}}
-      <br><br>
-      Check the information provided and then try again
-    {{/if}}
-  </div>
-</body>

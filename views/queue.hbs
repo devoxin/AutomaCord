@@ -2,7 +2,7 @@
 
 <body>
   {{> navbar}}
-  <div class="body-title">All Bots</div>
+  <div class="body-title">Bots in the queue</div>
   <div class="bots">
     {{#each bots}}
     <div class="bot-card" onclick="window.location = '/bot/{{id}}'">
@@ -10,11 +10,5 @@
       <span data-description="{{shortDesc}}">{{username}}</span>
     </div>
     {{/each}}
-    <a href="/add">
-      <div class="bot-card">
-        <img src="add_icon.png">
-        <span>Add your bot!</span>
-      </div>
-    </a>
   </div>
 </body>

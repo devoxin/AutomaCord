@@ -1,0 +1,10 @@
+{{> head}}
+
+<body>
+  {{> navbar}}
+  <form class="reject-bot" action="reject" method="POST">
+    <span>Reject {{username}}</span>
+    <input type="text" name="reason" placeholder="Reason..." required>
+    <button>Reject</button>
+  </form>
+</body>

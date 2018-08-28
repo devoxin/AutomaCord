@@ -41,12 +41,17 @@ class Route {
     server.use('/', router);
 
     router.get('/', async (req, res) => {
-      const bots = await db.table('bots');
+      const bots = await db.table('bots').filter({ 'approved': true });
       bots.forEach(bot => bot.seed = Math.random());
 
       const randomized = bots.sort((a, b) => a.seed - b.seed);
 
       res.render('index', { bots: randomized });
+    });
+
+    router.get('/queue', async (req, res) => {
+      const bots = await db.table('bots').filter({ 'approved': false }).orderBy('added');
+      res.render('queue', { bots });
     });
 
     router.get('/add', async (req, res) => {
@@ -95,7 +100,8 @@ class Route {
         avatar: user.avatar,
         discriminator: user.discriminator,
         owner: owner.id,
-        approved: false
+        approved: false,
+        added: Date.now()
       });
 
       res.render('added');
@@ -116,6 +122,7 @@ class Route {
       res.render('add', { 'editing': true, ...bot });
     });
 
+    // TODO: Move edit stuff to /bot/:id/edit
     router.post('/edit', async (req, res) => {
       if (!await req.user.isAuthenticated()) {
         return res.redirect('auth/login');
@@ -153,33 +160,7 @@ class Route {
       bot.createMessage(config.management.listLogChannel, `${ownerUser.username} edited ${editedBot.username} (<@${editedBot.id}>)`);
     });
 
-    router.get('/bot/:id', async (req, res) => {
-      const { id } = req.params;
-
-      if (!id) {
-        return res.render('error', { 'error': 'The ID you provided is invalid' });
-      }
-
-      const botInfo = await db.table('bots').get(req.params.id);
-
-      if (!botInfo) {
-        return res.render('error', { 'error': 'Bot not found! Did you mistype the ID?' });
-      }
-
-      const currentId = await req.user.id();
-      const currentUser = bot.listGuild.members.get(currentId);
-
-      const botOwner = await bot.fetchUser(botInfo.owner)
-        || { username: 'Unknown User', discriminator: '0000', id: botInfo.owner };
-
-      botInfo.invite = botInfo.invite || `https://discordapp.com/oauth2/authorize?client_id=${botInfo.id}&scope=bot`;
-      botInfo.owner = botOwner;
-      botInfo.isWebAdmin = currentUser && currentUser.roles.some(id => id === config.management.websiteAdminRole);
-      botInfo.canManageBot = currentId && botOwner.id === currentId || botInfo.isWebAdmin;
-
-      res.render('bot', botInfo);
-    });
-
+    // TODO: Move to bot route
     router.get('/delete', async (req, res) => {
       if (!await req.user.isAuthenticated()) {
         return res.redirect('auth/login');
@@ -213,73 +194,6 @@ class Route {
       res.redirect('/');
 
       bot.createMessage(config.management.listLogChannel, `${currentUser ? currentUser.username : `<@${currentId}>`} deleted ${botInfo.username} (<@${botInfo.id}>)`);
-    });
-
-    router.get('/approve', async (req, res) => {
-      if (!await req.user.isAuthenticated()) {
-        return res.redirect('auth/login');
-      }
-
-      if (!req.query.id) {
-        return res.redirect('/');
-      }
-
-      const currentId = await req.user.id();
-      const currentUser = bot.listGuild.members.get(currentId);
-      const botInfo = await db.table('bots').get(req.query.id);
-
-      if (!botInfo) {
-        return res.render('error', { 'error': 'No bot exists with with that ID' });
-      }
-
-      if (!currentUser || !currentUser.roles.some(id => id === config.management.websiteAdminRole)) {
-        return res.render('error', { 'error': 'You do not have permission to do that' });
-      }
-
-      await db.table('bots').get(req.query.id).update({
-        approved: true
-      });
-
-      const botOwner = bot.listGuild.members.get(botInfo.owner);
-
-      if (botOwner) {
-        await botOwner.addRole(config.management.botDeveloperRole, `${currentUser.username} approved ${botInfo.username}`);
-      }
-
-      res.redirect('/');
-      bot.createMessage(config.management.listLogChannel, `${currentUser.username} approved ${botInfo.username} (<@${botInfo.id}>)`);
-    });
-
-    router.get('/reject', async (req, res) => {
-      if (!await req.user.isAuthenticated()) {
-        return res.redirect('auth/login');
-      }
-
-      if (!req.query.id) {
-        return res.redirect('/');
-      }
-
-      const currentId = await req.user.id();
-      const currentUser = bot.listGuild.members.get(currentId);
-      const botInfo = await db.table('bots').get(req.query.id);
-
-      if (!botInfo) {
-        return res.render('error', { 'error': 'No bot exists with with that ID' });
-      }
-
-      if (!currentUser || !currentUser.roles.some(id => id === config.management.websiteAdminRole)) {
-        return res.render('error', { 'error': 'You do not have permission to do that' });
-      }
-
-      await db.table('bots').get(req.query.id).delete();
-      const botMember = bot.listGuild.members.get(req.query.id);
-
-      if (botMember) {
-        await botMember.kick(`Rejected by ${currentUser.username}`);
-      }
-
-      res.redirect('/');
-      bot.createMessage(config.management.listLogChannel, `${currentUser.username} rejected ${botInfo.username} (<@${botInfo.id}>)`);
     });
   }
 }

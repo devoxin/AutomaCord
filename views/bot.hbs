@@ -1,9 +1,4 @@
-<head>
-  <title>AutomaCord</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="/style.css">
-  <link href="https://fonts.googleapis.com/css?family=Poppins|Roboto" rel="stylesheet">
-</head>
+{{> head}}
 
 <body>
   {{> navbar}}
@@ -29,10 +24,10 @@
           {{/if}}
           {{#if isWebAdmin}}
             {{#unless approved}}
-            <a href="/approve?id={{id}}">
+            <a href="/bot/{{id}}/approve">
               <button>Approve</button>
             </a>
-            <a href="/reject?id={{id}}">
+            <a href="/bot/{{id}}/reject">
               <button>Reject</button>
             </a>
             {{/unless}}
