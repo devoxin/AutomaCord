@@ -40,7 +40,7 @@ class WebServer {
 
   start () {
     this.loadRoutes();
-    this.webServer.listen(config.web.port);
+    this.webServer.listen(config.web.port, '127.0.0.1');
   }
 }
 
