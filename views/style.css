@@ -118,10 +118,16 @@ a, a:visited, a:link, a:active {
   transition: 0.5s ease-out;
 }
 
-.bot-card:not(:last-child):hover > span::after {
-  content: '\a' attr(data-description);
-  white-space: pre-wrap;
-  margin: 10px;
+.bot-card:hover > span .description {
+  opacity: 1;
+  transition: 0.5s ease-in;
+}
+
+.bot-card .description {
+  position: absolute;
+  background-color: transparent;
+  opacity: 0;
+  height: 50%;
 }
 
 .add-title, .error-message {

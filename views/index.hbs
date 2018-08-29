@@ -7,7 +7,12 @@
     {{#each bots}}
     <div class="bot-card" onclick="window.location = '/bot/{{id}}'">
       <img src="https://cdn.discordapp.com/avatars/{{id}}/{{avatar}}.png?size=1024">
-      <span data-description="{{shortDesc}}">{{username}}</span>
+      <span>
+        {{username}}
+        <span class="description">
+          {{shortDesc}}
+        </span>
+      </span>
     </div>
     {{/each}}
     <a href="/add">
