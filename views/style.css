@@ -147,7 +147,7 @@ a, a:visited, a:link, a:active {
 }
 
 .add-form textarea {
-  min-height: 100px;
+  min-height: 200px;
 }
 
 .addform a, .add-form a:visited, .add-form a:link, .add-form a:active {
