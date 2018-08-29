@@ -8,7 +8,7 @@
   {{else}}
   <form action="add" method="POST" class="add-form">
   {{/if}}
-    <span>User ID (NOT Client ID)</span>
+    <span>User ID</span>
     {{#if editing}}
     <input type="text" name="clientId" required pattern="[0-9]{17,21}" value="{{id}}" readonly>
     {{else}}
