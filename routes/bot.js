@@ -4,6 +4,16 @@ const express = require('express');
 const marked = require('marked');
 const xss = require('xss');
 
+for (const key of Object.keys(xss.whiteList)) {
+  if (!xss.whiteList[key].includes('class')) {
+    xss.whiteList[key].push('class');
+  }
+
+  if (!xss.whiteList[key].includes('id')) {
+    xss.whiteList[key].push('id');
+  }
+}
+
 class Route {
   static async requireSignIn (req, res, next) {
     if (!await req.user.isAuthenticated()) {
@@ -45,7 +55,7 @@ class Route {
       const botOwner = await bot.fetchUser(botInfo.owner)
         || { username: 'Unknown User', discriminator: '0000', id: botInfo.owner };
 
-      botInfo.longDesc = xss(marked(botInfo.longDesc), { css: false, whiteList: { 'style': [], 'iframe': ['src'], ...xss.whiteList } });
+      botInfo.longDesc = xss(marked(botInfo.longDesc), { css: false, whiteList: { 'style': [], 'iframe': ['src', 'class', 'id'], ...xss.whiteList } });
       botInfo.invite = botInfo.invite || `https://discordapp.com/oauth2/authorize?client_id=${botInfo.id}&scope=bot`;
       botInfo.owner = botOwner;
       botInfo.isWebAdmin = currentUser && currentUser.roles.some(id => id === config.management.websiteAdminRole);
