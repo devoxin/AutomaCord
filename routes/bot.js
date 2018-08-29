@@ -1,16 +1,16 @@
 const config = require('../config');
 const db = require('../utils/db');
+const validate = require('../utils/payloadValidator');
 const express = require('express');
 const marked = require('marked');
 const xss = require('xss');
+const allowedAttrs = ['class', 'id', 'style'];
 
 for (const key of Object.keys(xss.whiteList)) {
-  if (!xss.whiteList[key].includes('class')) {
-    xss.whiteList[key].push('class');
-  }
-
-  if (!xss.whiteList[key].includes('id')) {
-    xss.whiteList[key].push('id');
+  for (const attr of allowedAttrs) {
+    if (!xss.whiteList[key].includes(attr)) {
+      xss.whiteList[key].push(attr);
+    }
   }
 }
 
@@ -117,6 +117,44 @@ class Route {
       }
 
       bot.createMessage(config.management.listLogChannel, `${currentUser.username} approved ${req.bot.username} (<@${req.bot.id}>)`);
+    });
+
+    router.get('/:id/edit', this.ensureBotExists, this.requireSignIn, async (req, res) => {
+      const currentUser = await req.user.id();
+      const currentMember = bot.listGuild.members.get(currentUser);
+
+      if (currentUser !== req.bot.owner && (!currentMember || !currentMember.roles.some(id => id === config.management.websiteAdminRole))) {
+        return res.render('error', { 'error': 'You do not have permission to edit this bot' });
+      }
+
+      res.render('add', { 'editing': true, ...req.bot });
+    });
+
+    router.post('/:id/edit', this.ensureBotExists, this.requireSignIn, async (req, res) => {
+      const validation = validate(req.body, false, res);
+
+      if (!validation) {
+        return;
+      }
+
+      const currentUser = await req.user.id();
+      const currentMember = bot.listGuild.members.get(currentUser);
+
+      if (currentUser !== req.bot.owner && (!currentMember || !currentMember.roles.some(id => id === config.management.websiteAdminRole))) {
+        return res.render('error', { 'error': 'You do not have permission to edit this bot' });
+      }
+
+      const { prefix, shortDesc, longDesc, inviteUrl } = req.body;
+
+      await db.table('bots').get(req.bot.id).update({
+        invite: inviteUrl,
+        prefix,
+        shortDesc,
+        longDesc
+      });
+
+      res.redirect(`/bot/${req.bot.id}`);
+      bot.createMessage(config.management.listLogChannel, `${currentMember ? currentMember.username : `<@${currentUser}>`} edited ${req.bot.username} (<@${req.bot.id}>)`);
     });
   }
 }
