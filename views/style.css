@@ -127,7 +127,10 @@ a, a:visited, a:link, a:active {
   position: absolute;
   background-color: transparent;
   opacity: 0;
-  height: 50%;
+  height: 45%;
+  width: 290px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 .add-title, .error-message {
