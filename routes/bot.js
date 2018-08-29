@@ -1,6 +1,8 @@
 const config = require('../config');
 const db = require('../utils/db');
 const express = require('express');
+const marked = require('marked');
+const filterXss = require('xss');
 
 class Route {
   static async requireSignIn (req, res, next) {
@@ -43,6 +45,7 @@ class Route {
       const botOwner = await bot.fetchUser(botInfo.owner)
         || { username: 'Unknown User', discriminator: '0000', id: botInfo.owner };
 
+      botInfo.longDesc = filterXss(marked(botInfo.longDesc));
       botInfo.invite = botInfo.invite || `https://discordapp.com/oauth2/authorize?client_id=${botInfo.id}&scope=bot`;
       botInfo.owner = botOwner;
       botInfo.isWebAdmin = currentUser && currentUser.roles.some(id => id === config.management.websiteAdminRole);
