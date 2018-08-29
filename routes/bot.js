@@ -156,6 +156,26 @@ class Route {
       res.redirect(`/bot/${req.bot.id}`);
       bot.createMessage(config.management.listLogChannel, `${currentMember ? currentMember.username : `<@${currentUser}>`} edited ${req.bot.username} (<@${req.bot.id}>)`);
     });
+
+    router.get('/:id/delete', this.ensureBotExists, this.requireSignIn, async (req, res) => {
+      const currentUser = await req.user.id();
+      const currentMember = bot.listGuild.members.get(currentUser);
+
+      if (currentUser !== req.bot.owner && (!currentMember || !currentMember.roles.some(id => id === config.management.websiteAdminRole))) {
+        return res.render('error', { 'error': 'You do not have permission to delete this bot' });
+      }
+
+      res.redirect('/');
+
+      const botMember = bot.listGuild.members.get(req.bot.id);
+
+      if (botMember) {
+        await botMember.kick(`Removed by ${currentMember ? currentMember.name : currentUser}`);
+      }
+
+      await db.table('bots').get(req.bot.id).delete();
+      bot.createMessage(config.management.listLogChannel, `${currentMember ? currentMember.username : `<@${currentUser}>`} deleted ${req.bot.username} (<@${req.bot.id}>)`);
+    });
   }
 }
 

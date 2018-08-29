@@ -75,42 +75,6 @@ class Route {
       res.render('added');
       bot.createMessage(config.management.listLogChannel, `${owner.username} added ${user.username} (<@${user.id}>)`);
     });
-
-    // TODO: Move to bot route
-    router.get('/delete', async (req, res) => {
-      if (!await req.user.isAuthenticated()) {
-        return res.redirect('auth/login');
-      }
-
-      if (!req.query.id) {
-        return res.redirect('/');
-      }
-
-      const currentId = await req.user.id();
-      const currentUser = bot.listGuild.members.get(currentId);
-      const botInfo = await db.table('bots').get(req.query.id);
-
-      if (!botInfo) {
-        return res.render('error', { 'error': 'No bot exists with with that ID' });
-      }
-
-      if (currentId !== botInfo.owner) {
-        if (!currentUser || !currentUser.roles.some(id => id === config.management.websiteAdminRole)) {
-          return res.render('error', { 'error': 'You do not have permission to do that' });
-        }
-      }
-
-      const botMember = bot.listGuild.members.get(req.query.id);
-
-      if (botMember) {
-        await botMember.kick(`Removed by ${currentUser ? currentUser.name : currentId}`);
-      }
-
-      await db.table('bots').get(req.query.id).delete();
-      res.redirect('/');
-
-      bot.createMessage(config.management.listLogChannel, `${currentUser ? currentUser.username : `<@${currentId}>`} deleted ${botInfo.username} (<@${botInfo.id}>)`);
-    });
   }
 }
 
