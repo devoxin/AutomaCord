@@ -4,6 +4,10 @@ const express = require('express');
 const marked = require('marked');
 const filterXss = require('xss');
 
+const xssFilter = Object.assign({
+  'style': []
+}, filterXss.whiteList);
+
 class Route {
   static async requireSignIn (req, res, next) {
     if (!await req.user.isAuthenticated()) {
@@ -45,14 +49,7 @@ class Route {
       const botOwner = await bot.fetchUser(botInfo.owner)
         || { username: 'Unknown User', discriminator: '0000', id: botInfo.owner };
 
-      botInfo.longDesc = filterXss(
-        marked(botInfo.longDesc),
-        {
-          whiteList: {
-            'style': []
-          }
-        }
-      );
+      botInfo.longDesc = filterXss(marked(botInfo.longDesc), xssFilter);
       botInfo.invite = botInfo.invite || `https://discordapp.com/oauth2/authorize?client_id=${botInfo.id}&scope=bot`;
       botInfo.owner = botOwner;
       botInfo.isWebAdmin = currentUser && currentUser.roles.some(id => id === config.management.websiteAdminRole);
