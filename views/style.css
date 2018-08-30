@@ -188,6 +188,10 @@ a, a:visited, a:link, a:active {
   margin-left: 20px;
 }
 
+.bot-label a {
+  color: #1E90FF;
+}
+
 .bot-name {
   font-size: 60px;
   font-family: 'Poppins', sans-serif;
@@ -225,4 +229,45 @@ a, a:visited, a:link, a:active {
 
 .reject-bot button {
   margin-top: 10px;
+}
+
+.user-profile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.user-profile .banner {
+  position: absolute;
+  width: 100%;
+  height: 400px;
+  top: 0px;
+  object-fit: cover;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0));
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0));
+  z-index: -1;
+}
+
+.user-profile .avatar {
+  margin-top: 20px;
+  border-radius: 100%;
+}
+
+.user-profile .username {
+  font-family: 'Poppins', sans-serif;
+  margin-top: 20px;
+  font-size: 32px;
+}
+
+.user-profile .bot-title {
+  margin-top: 75px;
+  font-size: 32px;
+}
+
+.user-profile .bot-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
 }

@@ -38,6 +38,18 @@ class Route {
     next();
   }
 
+  static async addPoint (userId, type) {
+    const points = await db.table('users')
+      .get(userId)(type)
+      .default(0)
+      .add(1);
+
+    await db.table('users').insert({
+      id: userId,
+      [type]: points
+    }, { conflict: 'update' });
+  }
+
   static configure (server, bot) {
     const router = express.Router();
     server.use('/bot', router);
@@ -87,6 +99,7 @@ class Route {
 
       res.redirect('/queue');
 
+      this.addPoint(currentUser.id, 'rejected');
       await db.table('bots').get(req.bot.id).delete();
       const botMember = bot.listGuild.members.get(req.bot.id);
 
@@ -106,6 +119,7 @@ class Route {
 
       res.redirect('/queue');
 
+      this.addPoint(currentUser.id, 'approved');
       await db.table('bots').get(req.bot.id).update({
         approved: true
       });

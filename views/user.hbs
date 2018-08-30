@@ -1,0 +1,23 @@
+{{> head}}
+
+<body>
+  {{> navbar}}
+  <div class="user-profile">
+    <img class="banner" src="{{banner}}" onerror="this.style.display = 'none';">
+    <img class="avatar" src="https://cdn.discordapp.com/avatars/{{user.id}}/{{user.avatar}}.png?size=256">
+    <span class="username">{{user.username}}</span>
+    {{#if isWebAdmin}}
+      <span class="approved">Total Bots Approved: {{opt approved '0'}}</span>
+      <span class="approved">Total Bots Rejected: {{opt rejected '0'}}</span>
+    {{/if}}
+    <span class="bot-title">Bots</span>
+    <div class="bot-list">
+      {{#each bots}}
+        <div class="bot-card" onclick="window.location = '/bot/{{id}}'">
+          <img src="https://cdn.discordapp.com/avatars/{{id}}/{{avatar}}.png?size=512">
+          <span>{{username}}</span>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</body>
