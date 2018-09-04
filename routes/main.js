@@ -4,6 +4,14 @@ const validate = require('../utils/payloadValidator');
 const express = require('express');
 
 class Route {
+  static async requireSignIn (req, res, next) {
+    if (!await req.user.isAuthenticated()) {
+      return res.redirect('auth/login');
+    }
+
+    next();
+  }
+
   static configure (server, bot) {
     const router = express.Router();
     server.use('/', router);
@@ -22,15 +30,11 @@ class Route {
       res.render('queue', { bots });
     });
 
-    router.get('/add', async (req, res) => {
-      if (!await req.user.isAuthenticated()) {
-        return res.redirect('auth/login');
-      }
-
+    router.get('/add', this.requireSignIn, async (req, res) => {
       res.render('add');
     });
 
-    router.post('/add', async (req, res) => {
+    router.post('/add', this.requireSignIn, async (req, res) => {
       const validation = validate(req.body, true, res);
 
       if (!validation) {
@@ -74,6 +78,11 @@ class Route {
 
       res.render('added');
       bot.createMessage(config.management.listLogChannel, `${owner.username} added ${user.username} (<@${user.id}>)`);
+    });
+
+    router.get('/profile', this.requireSignIn, async (req, res) => {
+      const id = await req.user.id();
+      res.redirect(`/user/${id}`);
     });
   }
 }
