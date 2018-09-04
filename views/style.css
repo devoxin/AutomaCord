@@ -250,6 +250,7 @@ a, a:visited, a:link, a:active {
 }
 
 .user-profile .avatar {
+  width: 256px;
   margin-top: 20px;
   border-radius: 100%;
 }
