@@ -1,4 +1,3 @@
-const config = require('../config');
 const db = require('../utils/db');
 const express = require('express');
 
@@ -26,7 +25,7 @@ class Route {
 
     router.get('/', (req, res) => {
       res.render('error', { 'error': 'Docs pending.' });
-    })
+    });
 
     router.get('/bot/:id', this.ensureBotExists, (req, res) => {
       res.json(req.bot);
