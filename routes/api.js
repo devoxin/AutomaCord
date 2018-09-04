@@ -3,13 +3,11 @@ const express = require('express');
 
 class Route {
   static async ensureBotExists (req, res, next) {
-    const { id } = req.params;
-
-    if (!id) {
+    if (!req.params.id) {
       return res.status(400).json({ message: 'Invalid Bot ID' });
     }
 
-    const bot = await db.table('bots').get(id);
+    const bot = await db.table('bots').get(req.params.id);
 
     if (!bot) {
       return res.status(404).json({ message: 'No bots found with that ID' });
