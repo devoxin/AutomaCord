@@ -37,7 +37,7 @@ class Automa extends Client {
 
 const bot = new Automa(config.bot.token);
 
-bot.on('messageCreate', (msg) => {
+bot.on('messageCreate', async (msg) => {
   if (msg.author.bot || !msg.content.startsWith(config.bot.prefix)) {
     return;
   }
@@ -46,6 +46,14 @@ bot.on('messageCreate', (msg) => {
 
   if ('ping' === command) {
     msg.channel.createMessage('ponk :ping_pong:');
+  }
+
+  if ('queue' === command) {
+    const bots = await db.table('bots').filter({ 'approved': false }).orderBy('added').limit(10);
+    msg.channel.createMessage({ embed: {
+      title: `First ${bots.length} bots in the queue`,
+      description: bots.map(b => `[${b.username}](https://discordapp.com/oauth2/authorize?client_id=${b.id}&scope=bot)`).join('\n') || 'None'
+    }});
   }
 
   if ('eval' === command) {
