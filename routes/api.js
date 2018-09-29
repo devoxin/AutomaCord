@@ -25,6 +25,11 @@ class Route {
       res.render('error', { 'error': 'Docs pending.' });
     });
 
+    router.get('/bots', async (req, res) => {
+      const bots = await db.table('bots');
+      res.json(bots);
+    });
+
     router.get('/bot/:id', this.ensureBotExists, (req, res) => {
       res.json(req.bot);
     });

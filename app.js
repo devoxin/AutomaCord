@@ -1,7 +1,7 @@
 const { Client } = require('eris');
 const WebServer = require('./server');
 const config = require('./config');
-const db = require('./utils/db')
+const db = require('./utils/db');
 
 class Automa extends Client {
   constructor (token, clientOptions) {
@@ -51,10 +51,12 @@ bot.on('messageCreate', async (msg) => {
 
   if ('queue' === command) {
     const bots = await db.table('bots').filter({ 'approved': false }).orderBy('added').limit(10);
-    msg.channel.createMessage({ embed: {
-      title: `First ${bots.length} bots in the queue`,
-      description: bots.map(b => `[${b.username}](https://discordapp.com/oauth2/authorize?client_id=${b.id}&scope=bot)`).join('\n') || 'None'
-    }});
+    msg.channel.createMessage({
+      embed: {
+        title: `First ${bots.length} bots in the queue`,
+        description: bots.map(b => `[${b.username}](https://discordapp.com/oauth2/authorize?client_id=${b.id}&scope=bot)`).join('\n') || 'None'
+      }
+    });
   }
 
   if ('eval' === command) {
