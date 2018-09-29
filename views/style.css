@@ -96,7 +96,7 @@ a, a:visited, a:link, a:active {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: rgba(32,34,37,.6);
+  background-color: rgba(32, 34, 37, .6);
   bottom: 0px;
   height: 40px;
   width: 100%;
@@ -104,7 +104,7 @@ a, a:visited, a:link, a:active {
   text-align: center;
 }
 
-.bot-card:hover > img {
+.bot-card:hover>img {
   -webkit-filter: blur(4px);
   -moz-filter: blur(4px);
   -o-filter: blur(4px);
@@ -113,12 +113,12 @@ a, a:visited, a:link, a:active {
   transition: 0.5s ease-out;
 }
 
-.bot-card:hover > span {
+.bot-card:hover>span {
   height: 100%;
   transition: 0.5s ease-out;
 }
 
-.bot-card:hover > span .description {
+.bot-card:hover>span .description {
   opacity: 1;
   transition: 0.5s ease-in;
 }
@@ -157,6 +157,19 @@ a, a:visited, a:link, a:active {
 
 .add-form textarea {
   min-height: 200px;
+}
+
+.add-form input {
+  min-height: 25px;
+}
+
+.add-form input, .add-form textarea {
+  border: 1px solid black;
+  background-color: rgb(50, 50, 50);
+  color: white;
+  outline: none;
+  font-family: 'Open Sans', sans-serif;
+  padding-left: 5px;
 }
 
 .add-form a, .add-form a:visited, .add-form a:link, .add-form a:active {
