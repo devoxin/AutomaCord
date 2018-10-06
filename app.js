@@ -33,6 +33,24 @@ class Automa extends Client {
     this.once('ready', () => {
       this.webServer.start();
     });
+
+    this.on('userUpdate', this.avatarUpdateHandler.bind(this));
+  }
+
+  async avatarUpdateHandler (newUser, oldUser) {
+    if (!newUser.bot) {
+      return;
+    }
+
+    if (newUser.avatar !== oldUser.avatar) {
+      const data = await db.table('bots').get(newUser.id);
+
+      if (!data) {
+        return; // wtf
+      }
+
+      await db.table('bots').get(newUser.id).update({ avatar: newUser.avatar });
+    }
   }
 }
 
