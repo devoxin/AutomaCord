@@ -90,7 +90,12 @@ bot.on('messageCreate', async (msg) => {
     }
 
     const user = bot.users.get(botOwnerId) || {};
-    msg.channel.createMessage(user.username || 'Unknown user.');
+
+    if (!user) {
+      return msg.channel.createMessage('Unknown user.');
+    }
+
+    msg.channel.createMessage(`${user.username}#${user.discriminator} (${user.id})`);
   }
 
   if ('eval' === command) {
