@@ -77,6 +77,22 @@ bot.on('messageCreate', async (msg) => {
     });
   }
 
+  if ('owner' === command) {
+    if (0 === msg.mentions.length) {
+      return msg.channel.createMessage('You need to mention a bot.');
+    }
+
+    const botId = msg.mentions[0].id;
+    const botOwnerId = await db.table('bots').get(botId)('owner').default(undefined);
+
+    if (!bot) {
+      return msg.channel.createMessage('No bots found with that ID');
+    }
+
+    const user = bot.users.get(botOwnerId);
+    msg.channel.createMessage(user.username || 'Unknown user.');
+  }
+
   if ('eval' === command) {
     if ('180093157554388993' !== msg.author.id) {
       return;
