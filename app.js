@@ -89,7 +89,7 @@ bot.on('messageCreate', async (msg) => {
       return msg.channel.createMessage('No bots found with that ID');
     }
 
-    const user = bot.users.get(botOwnerId);
+    const user = bot.users.get(botOwnerId) || {};
     msg.channel.createMessage(user.username || 'Unknown user.');
   }
 
