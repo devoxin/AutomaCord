@@ -85,7 +85,7 @@ bot.on('messageCreate', async (msg) => {
     const botId = msg.mentions[0].id;
     const botOwnerId = await db.table('bots').get(botId)('owner').default(false);
 
-    if (!bot) {
+    if (!botOwnerId) {
       return msg.channel.createMessage('No bots found with that ID');
     }
 
