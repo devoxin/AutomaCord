@@ -22,13 +22,13 @@ class Route {
     server.use('/', router);
 
     router.get('/', async (req, res) => {
-      const data = await db.table('bots').filter({ 'approved': true }).limit(15);
+      const data = await db.table('bots').filter({ 'approved': true });
       data.forEach(boat => {
         boat.seed = Math.random();
         boat.avatar = this.getAvatar(bot, boat.id);
       });
 
-      const bots = data.sort((a, b) => a.seed - b.seed);
+      const bots = data.sort((a, b) => a.seed - b.seed).slice(0, 15);
 
       res.render('index', { bots });
     });
