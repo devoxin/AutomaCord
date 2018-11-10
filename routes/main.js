@@ -12,17 +12,25 @@ class Route {
     next();
   }
 
+  static getAvatar (bot, id) {
+    const user = bot.users.get(id) || {};
+    return user.avatar || '';
+  }
+
   static configure (server, bot) {
     const router = express.Router();
     server.use('/', router);
 
     router.get('/', async (req, res) => {
-      const bots = await db.table('bots').filter({ 'approved': true });
-      bots.forEach(bot => bot.seed = Math.random());
+      const data = await db.table('bots').filter({ 'approved': true }).limit(15);
+      data.forEach(boat => {
+        boat.seed = Math.random();
+        boat.avatar = this.getAvatar(bot, boat.id);
+      });
 
-      const randomized = bots.sort((a, b) => a.seed - b.seed);
+      const bots = data.sort((a, b) => a.seed - b.seed);
 
-      res.render('index', { bots: randomized });
+      res.render('index', { bots });
     });
 
     router.get('/queue', async (req, res) => {

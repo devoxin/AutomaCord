@@ -17,6 +17,11 @@ class Route {
     next();
   }
 
+  static getAvatar (bot, id) {
+    const user = bot.users.get(id) || {};
+    return user.avatar || '';
+  }
+
   static configure (server, bot) {
     const router = express.Router();
     server.use('/api', router);
@@ -32,6 +37,20 @@ class Route {
 
     router.get('/bot/:id', this.ensureBotExists, (req, res) => {
       res.json(req.bot);
+    });
+
+    router.get('/search', async (req, res) => {
+      const { query } = req.query;
+
+      if (0 === query.length || !/^[a-zA-Z0-9 ]+$/.test(query)) {
+        return res.json([]);
+      }
+
+      const results = await db.table('bots')
+        .filter(b => b('username').downcase().match(query));
+
+      results.forEach(b => b.avatar = this.getAvatar(bot, b.id));
+      res.json(results);
     });
   }
 }

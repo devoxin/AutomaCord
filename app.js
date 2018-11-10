@@ -5,10 +5,11 @@ const db = require('./utils/db');
 
 class Automa extends Client {
   constructor (token, clientOptions) {
-    const options = Object.assign({
+    const options = {
+      ...clientOptions,
       getAllUsers: true,
       restMode: true
-    }, clientOptions);
+    };
 
     super(token, options);
 
@@ -33,24 +34,6 @@ class Automa extends Client {
     this.once('ready', () => {
       this.webServer.start();
     });
-
-    this.on('userUpdate', this.avatarUpdateHandler.bind(this));
-  }
-
-  async avatarUpdateHandler (newUser, oldUser) {
-    if (!newUser.bot) {
-      return;
-    }
-
-    if (newUser.avatar !== oldUser.avatar) {
-      const data = await db.table('bots').get(newUser.id);
-
-      if (!data) {
-        return; // wtf
-      }
-
-      await db.table('bots').get(newUser.id).update({ avatar: newUser.avatar });
-    }
   }
 }
 
@@ -89,7 +72,7 @@ bot.on('messageCreate', async (msg) => {
       return msg.channel.createMessage('No bots found with that ID');
     }
 
-    const user = bot.users.get(botOwnerId) || {};
+    const user = bot.users.get(botOwnerId);
 
     if (!user) {
       return msg.channel.createMessage('Unknown user.');
