@@ -29,7 +29,7 @@ class Route {
     const router = express.Router();
     server.use('/user', router);
 
-    router.get('/:id', this.ensureUserExists.bind(null, bot), (req, res) => {
+    router.get('/:id', this.ensureUserExists.bind(this, bot), (req, res) => {
       res.render('user', req.userProfile);
     });
   }
