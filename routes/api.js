@@ -47,7 +47,7 @@ class Route {
       }
 
       const results = await db.table('bots')
-        .filter(b => b('username').downcase().match(query));
+        .filter(b => b('username').downcase().match(query) && b('approved').eq(true));
 
       results.forEach(b => b.avatar = this.getAvatar(bot, b.id));
       res.json(results);

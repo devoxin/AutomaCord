@@ -3,6 +3,11 @@ const db = require('../utils/db');
 const express = require('express');
 
 class Route {
+  static getAvatar (bot, id) {
+    const user = bot.users.get(id) || {};
+    return user.avatar || '';
+  }
+
   static async ensureUserExists (bot, req, res, next) {
     const member = bot.listGuild.members.get(req.params.id);
 
@@ -13,6 +18,8 @@ class Route {
     const profile = await db.table('users').get(req.params.id).default({});
     const bots = await db.table('bots').filter({ 'owner': req.params.id });
     const isWebAdmin = member && member.roles.some(id => id === config.management.websiteAdminRole);
+
+    bots.forEach(b => b.avatar = this.getAvatar(bot, b.id));
 
     req.userProfile = { ...member, ...profile, isWebAdmin, bots };
     next();
