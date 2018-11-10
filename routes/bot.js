@@ -50,6 +50,11 @@ class Route {
     }, { conflict: 'update' });
   }
 
+  static getAvatar (bot, id) {
+    const user = bot.users.get(id) || {};
+    return user.avatar || '';
+  }
+
   static configure (server, bot) {
     const router = express.Router();
     server.use('/bot', router);
@@ -67,6 +72,7 @@ class Route {
       const botOwner = await bot.fetchUser(botInfo.owner)
         || { username: 'Unknown User', discriminator: '0000', id: botInfo.owner };
 
+      botInfo.avatar = this.getAvatar(bot, botInfo.id);
       botInfo.longDesc = xss(marked(botInfo.longDesc), { css: false, whiteList: { 'style': [], 'iframe': ['src', 'class', 'id'], ...xss.whiteList } });
       botInfo.invite = botInfo.invite || `https://discordapp.com/oauth2/authorize?client_id=${botInfo.id}&scope=bot`;
       botInfo.owner = botOwner;
