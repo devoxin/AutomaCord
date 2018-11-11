@@ -50,8 +50,8 @@ class Route {
     }, { conflict: 'update' });
   }
 
-  static getAvatar (bot, id) {
-    const user = bot.users.get(id) || {};
+  static async getAvatar (bot, id) {
+    const user = await bot.fetchUser(id) || {};
     return user.avatar || '';
   }
 
