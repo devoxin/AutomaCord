@@ -4,7 +4,7 @@ const express = require('express');
 
 class Route {
   static async getAvatar (bot, id) {
-    const user = bot.fetchUser(id) || {};
+    const user = await bot.fetchUser(id) || {};
     return user.avatar || '';
   }
 
