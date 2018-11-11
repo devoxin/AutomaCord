@@ -72,7 +72,7 @@ class Route {
       const botOwner = await bot.fetchUser(botInfo.owner)
         || { username: 'Unknown User', discriminator: '0000', id: botInfo.owner };
 
-      botInfo.avatar = this.getAvatar(bot, botInfo.id);
+      botInfo.avatar = await this.getAvatar(bot, botInfo.id);
       botInfo.longDesc = xss(marked(botInfo.longDesc), { css: false, whiteList: { 'style': [], 'iframe': ['src', 'class', 'id'], ...xss.whiteList } });
       botInfo.invite = botInfo.invite || `https://discordapp.com/oauth2/authorize?client_id=${botInfo.id}&scope=bot`;
       botInfo.owner = botOwner;
