@@ -184,7 +184,7 @@ a, a:visited, a:link, a:active {
   min-height: 25px;
 }
 
-.search-bar input, .add-form input, .add-form textarea {
+.reject-bot input, .search-bar input, .add-form input, .add-form textarea {
   border: 1px solid black;
   background-color: rgb(50, 50, 50);
   color: white;
@@ -258,7 +258,7 @@ a, a:visited, a:link, a:active {
 
 .reject-bot input {
   margin-top: 10px;
-  height: 25px;
+  height: 30px;
 }
 
 .reject-bot button {
