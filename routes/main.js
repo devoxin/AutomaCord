@@ -24,9 +24,9 @@ class Route {
     router.get('/', async (req, res) => {
       const data = await db.table('bots').filter({ 'approved': true });
 
-      for (const bot of data) {
-        bot.seed = Math.random();
-        bot.avatar = await this.getAvatar(bot, bot.id);
+      for (const boat of data) {
+        boat.seed = Math.random();
+        boat.avatar = await this.getAvatar(bot, boat.id);
       }
 
       const bots = data.sort((a, b) => a.seed - b.seed).slice(0, 15);
@@ -37,8 +37,8 @@ class Route {
     router.get('/queue', async (req, res) => {
       const bots = await db.table('bots').filter({ 'approved': false }).orderBy('added');
 
-      for (const bot of bots) {
-        bot.avatar = await this.getAvatar(bot, bot.id);
+      for (const boat of bots) {
+        boat.avatar = await this.getAvatar(bot, boat.id);
       }
 
       res.render('queue', { bots });
