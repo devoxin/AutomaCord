@@ -26,7 +26,7 @@ class Route {
 
       for (const bot of data) {
         bot.seed = Math.random();
-        bot.avatar = await this.getAvatar(bot, boat.id);
+        bot.avatar = await this.getAvatar(bot, bot.id);
       }
 
       const bots = data.sort((a, b) => a.seed - b.seed).slice(0, 15);
@@ -38,7 +38,7 @@ class Route {
       const bots = await db.table('bots').filter({ 'approved': false }).orderBy('added');
 
       for (const bot of bots) {
-        bot.avatar = await this.getAvatar(bot, boat.id);
+        bot.avatar = await this.getAvatar(bot, bot.id);
       }
 
       res.render('queue', { bots });
