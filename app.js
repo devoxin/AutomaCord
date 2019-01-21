@@ -16,12 +16,24 @@ class Automa extends Client {
     this.webServer = new WebServer(this);
   }
 
-  fetchUser (userId) {
+  async fetchUser (userId) {
     if (!userId || !this.shards.get(0).ready) {
       return null;
     }
 
-    return this.users.get(userId) || this.getRESTUser(userId).catch(() => null);
+    let user;
+
+    if (!this.users.has(userId)) {
+      const restUser = await this.getRESTUser(userId).catch(() => null);
+
+      if (restUser) {
+        user = this.users.add(restUser);
+      }
+    } else {
+      user = this.users.get(userId);
+    }
+
+    return user;
   }
 
   get listGuild () {
