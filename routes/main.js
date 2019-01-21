@@ -55,7 +55,7 @@ class Route {
         return;
       }
 
-      const { clientId, prefix, shortDesc, longDesc, inviteUrl } = req.body;
+      const { clientId, prefix, shortDesc, longDesc, inviteUrl, owners } = req.body;
       const user = await bot.fetchUser(clientId);
 
       if (!user) {
@@ -86,6 +86,7 @@ class Route {
         avatar: user.avatar,
         discriminator: user.discriminator,
         owner: owner.id,
+        additionalOwners: owners.split(' ').filter(e => !!e),
         approved: false,
         added: Date.now()
       });

@@ -55,6 +55,17 @@ class Route {
     return user.avatar || '';
   }
 
+  static async getAdditionalOwners (bot, ids) {
+    const owners = [];
+
+    for (const id of ids || []) {
+      const u = await bot.fetchUser(id, false);
+      owners.push(u ? `${u.username}#${u.discriminator}` : 'Unknown User#0000');
+    }
+
+    return owners.join(', ');
+  }
+
   static configure (server, bot) {
     const router = express.Router();
     server.use('/bot', router);
@@ -78,6 +89,7 @@ class Route {
       botInfo.owner = botOwner;
       botInfo.isWebAdmin = currentUser && currentUser.roles.some(id => id === config.management.websiteAdminRole);
       botInfo.canManageBot = currentId && botOwner.id === currentId || botInfo.isWebAdmin;
+      botInfo.additionalOwners = await this.getAdditionalOwners(bot, botInfo.additionalOwners);
 
       res.render('bot', botInfo);
     });
@@ -164,13 +176,14 @@ class Route {
         return res.render('error', { 'error': 'You do not have permission to edit this bot' });
       }
 
-      const { prefix, shortDesc, longDesc, inviteUrl } = req.body;
+      const { prefix, shortDesc, longDesc, inviteUrl, owners } = req.body;
 
       await db.table('bots').get(req.bot.id).update({
         invite: inviteUrl,
         prefix,
         shortDesc,
-        longDesc
+        longDesc,
+        additionalOwners: owners.split(' ').filter(e => !!e)
       });
 
       res.redirect(`/bot/${req.bot.id}`);

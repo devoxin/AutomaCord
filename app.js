@@ -16,14 +16,14 @@ class Automa extends Client {
     this.webServer = new WebServer(this);
   }
 
-  async fetchUser (userId) {
+  async fetchUser (userId, fetch = true) {
     if (!userId || !this.shards.get(0).ready) {
       return null;
     }
 
     let user;
 
-    if (!this.users.has(userId)) {
+    if (!this.users.has(userId) && fetch) {
       const restUser = await this.getRESTUser(userId).catch(() => null);
 
       if (restUser) {

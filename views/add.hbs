@@ -20,10 +20,12 @@
     <input type="text" name="prefix" required pattern=".{1,}" value="{{prefix}}">
     <span>Short Description</span>
     <input type="text" name="shortDesc" maxlength="150" value="{{shortDesc}}">
-    <span>Long Description</span>
+    <span>Long Description (HTML + Markdown)</span>
     <textarea type="text" name="longDesc">{{longDesc}}</textarea>
+    <span>Additional Owners (space separated)</span>
+    <input type="text" name="owners" value="{{join additionalOwners ' '}}">
     {{#if editing}}
-    <button type="submit">Apply Changes</button>
+    <button type="submit">Submit</button>
     {{else}}
     <button type="submit">Add!</button>
     {{/if}}

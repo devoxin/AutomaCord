@@ -18,7 +18,9 @@ class WebServer {
       partialsDir: `${__dirname}/views/partials/`,
       helpers: {
         preserveNewlines: (content) => new SafeString(Utils.escapeExpression(content).replace(/\r\n|\n|\r/gm, '<br>')),
-        opt: (obj1, obj2) => obj1 || obj2
+        opt: (obj1, obj2) => obj1 || obj2,
+        split: (str, chr) => str.split(chr),
+        join: (arr, chr) => arr.join(chr)
       }
     }));
     this.webServer.set('view engine', '.hbs');

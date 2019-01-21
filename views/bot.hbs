@@ -8,6 +8,9 @@
       <div class="bot-subinfo">
         <span class="bot-name">{{username}}</span>
         <span class="bot-label">Owner: <a href="/user/{{owner.id}}">{{owner.username}}#{{owner.discriminator}}</a></span>
+        {{#if additionalOwners}}
+        <span class="bot-label">Additional Owners: {{additionalOwners}}</span>
+        {{/if}}
         <span class="bot-label">Prefix: {{prefix}}</span>
         <span class="bot-label">{{shortDesc}}</span>
         <div class="bot-links">
