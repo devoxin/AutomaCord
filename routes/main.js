@@ -108,7 +108,7 @@ class Route {
       for (const boat of bots) {
         const u = bot.users.get(boat.id);
         const newAvatar = u ? (u.avatar || u.defaultAvatar) : boat.avatar; // eslint-disable-line
-        boat.hasAvatar = Boolean(u && !u.avatar && u.defaultAvatar);
+        boat.hasAvatar = u && u.avatar !== null;
         boat.avatar = newAvatar;
       }
 
