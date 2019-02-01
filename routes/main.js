@@ -104,6 +104,12 @@ class Route {
 
     router.get('/all', async (req, res) => {
       const bots = await db.table('bots').without(rejectAllFields);
+
+      for (const boat of bots) {
+        const u = bot.users.get(boat.id);
+        boat.avatar = u ? u.avatar : boat.avatar;
+      }
+
       res.render('all', { bots });
     });
   }
