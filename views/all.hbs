@@ -9,7 +9,7 @@
     <input type="text" maxlength="100" placeholder="Enter a search query..." onkeydown="searchBots(event)">
   </div>
   <div class="bots" id="search-result"></div>
-  <div class="body-title">Random Bots <a href="/all">(View All)</a></div>
+  <div class="body-title">All Bots</div>
   <div class="bots">
     {{#each bots}}
     <div class="bot-card" onclick="window.location.href = '/bot/{{id}}'">
@@ -22,11 +22,5 @@
       </span>
     </div>
     {{/each}}
-    <a href="/add">
-      <div class="bot-card">
-        <img src="add_icon.png">
-        <span>Add your bot!</span>
-      </div>
-    </a>
   </div>
 </body>

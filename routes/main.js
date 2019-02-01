@@ -3,10 +3,12 @@ const db = require('../utils/db');
 const validate = require('../utils/payloadValidator');
 const express = require('express');
 
+const rejectAllFields = ['invite', 'prefix', 'longDesc', 'discriminator', 'owner', 'additionalOwners', 'approved', 'added'];
+
 class Route {
   static async requireSignIn (req, res, next) {
     if (!await req.user.isAuthenticated()) {
-      return res.redirect('auth/login');
+      return res.redirect('/auth/login');
     }
 
     next();
@@ -98,6 +100,11 @@ class Route {
     router.get('/profile', this.requireSignIn, async (req, res) => {
       const id = await req.user.id();
       res.redirect(`/user/${id}`);
+    });
+
+    router.get('/all', async (req, res) => {
+      const bots = await db.table('bots').without(rejectAllFields);
+      res.render('all', { bots });
     });
   }
 }

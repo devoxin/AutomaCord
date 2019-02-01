@@ -222,7 +222,7 @@ a, a:visited, a:link, a:active {
   margin-left: 20px;
 }
 
-.bot-label a {
+.body-title a, .bot-label a {
   color: #1E90FF;
 }
 
