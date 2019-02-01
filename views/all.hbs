@@ -13,7 +13,7 @@
   <div class="bots">
     {{#each bots}}
     <div class="bot-card" onclick="window.location.href = '/bot/{{id}}'">
-      {{#if isDefault}}
+      {{#if hasAvatar}}
       <img src="https://cdn.discordapp.com/avatars/{{id}}/{{avatar}}.png?size=512">
       {{else}}
       <img src="https://discordapp.com/assets/{{avatar}}.png?size=512">
