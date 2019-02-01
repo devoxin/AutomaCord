@@ -19,6 +19,12 @@ class Route {
     const router = express.Router();
     server.use('/auth', router);
 
+    router.get('/logout', (req, res) => {
+      res
+        .cookie('automacord', '', { expires: new Date() })
+        .redirect('/');
+    });
+
     router.get('/login', (req, res) => {
       const compiled = BASE_URL
         .replace('{clientid}', config.discord.clientId)

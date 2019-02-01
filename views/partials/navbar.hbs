@@ -10,11 +10,25 @@
     <a href="https://discord.gg/XQT4DEt" target="_blank">
       <span class="nav-option">Join Server</span>
     </a>
-    <a href="/profile">
-      <span class="nav-option">Profile</span>
+    {{#if signedIn}}
+    <span class="nav-option has-menu">
+      {{cUser}}
+      <div class="submenu">
+        <a href="/profile">
+          <span class="nav-suboption">Profile</span>
+        </a>
+        <a href="/add">
+          <span class="nav-suboption">Add Bot</span>
+        </a>
+        <a href="/auth/logout">
+          <span class="nav-suboption">Logout</span>
+        </a>
+      </div>
+    </span>
+    {{else}}
+    <a href="/auth/login">
+      <span class="nav-option">Login</span>
     </a>
-    <a href="/add">
-      <span class="nav-option">Add Bot</span>
-    </a>
+    {{/if}}
   </div>
 </div>

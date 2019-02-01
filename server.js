@@ -31,6 +31,20 @@ class WebServer {
     this.webServer.use(bodyParser.json());
     this.webServer.use(cookieParser());
     this.webServer.use(getUser);
+    this.webServer.use(async (req, res, next) => {
+      const currentId = await req.user.id();
+      const currentUser = bot.listGuild.members.get(currentId);
+
+      res.locals.signedIn = !!currentUser;
+
+      if (!currentUser) {
+        res.locals.cUser = 'Unknown User#0000';
+      } else {
+        res.locals.cUser = `${currentUser.username}#${currentUser.discriminator}`;
+      }
+
+      next();
+    });
   }
 
   loadRoutes () {

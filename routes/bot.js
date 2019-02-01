@@ -59,7 +59,7 @@ class Route {
     const owners = [];
 
     for (const id of ids || []) {
-      const u = await bot.fetchUser(id, false);
+      const u = await bot.fetchUser(id, true); // bool -> cache
       owners.push(u ? `${u.username}#${u.discriminator}` : 'Unknown User#0000');
     }
 

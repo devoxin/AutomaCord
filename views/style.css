@@ -306,3 +306,33 @@ a, a:visited, a:link, a:active {
   flex-wrap: wrap;
   justify-content: center;
 }
+
+.has-menu {
+  user-select: none;
+  padding-bottom: 20px;
+}
+
+.has-menu:hover > .submenu {
+  display: flex;
+}
+
+.submenu {
+  position: absolute;
+  background-color: #202225;
+  width: 150px;
+  top: 60px;
+  right: 0px;
+  flex-direction: column;
+  display: none;
+}
+
+.nav-suboption {
+  display: block;
+  text-align: center;
+  padding: 7px 0px 7px 0px;
+  cursor: pointer;
+}
+
+.nav-suboption:hover {
+  background-color: #2a2c30;
+}
