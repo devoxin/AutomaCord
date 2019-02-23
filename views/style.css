@@ -35,6 +35,11 @@ a, a:visited, a:link, a:active {
   background-color: #202225;
 }
 
+.nav-icon {
+  display: none;
+  height: 60px;
+}
+
 .nav-title {
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
@@ -335,4 +340,14 @@ a, a:visited, a:link, a:active {
 
 .nav-suboption:hover {
   background-color: #2a2c30;
+}
+
+@media only screen and (max-width: 600px) {
+  .nav-icon {
+    display: inline;
+  }
+
+  .nav-title {
+    display: none;
+  }
 }
