@@ -14,12 +14,12 @@ button {
   font-family: 'Roboto', sans-serif;
   font-size: 20px;
   cursor: pointer;
-  transition: 0.5s ease-out;
+  transition: border 0.5s ease-out;
 }
 
 button:hover {
   border: 1px solid white;
-  transition: 0.5s ease-in;
+  transition: border 0.5s ease-in;
 }
 
 a, a:visited, a:link, a:active {
