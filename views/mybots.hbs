@@ -1,0 +1,69 @@
+{{> head}}
+
+<body>
+  {{> navbar}}
+  <div class="body-title">Your Bots</div>
+  <table class="my-bots">
+    <tr>
+      <th>Bot Name</th>
+      <th></th>
+      <th>Queue Status</th>
+    </tr>
+    {{#each rejected}}
+    <tr>
+      <td>
+        <img src="https://cdn.discordapp.com/avatars/{{id}}/{{avatar}}.png?size=512" style="border-radius: 100%;">
+        <a href="/bot/{{id}}">
+          {{username}}
+        </a>
+      </td>
+      <td>
+        {{reason}}
+      </td>
+      <td>
+        Rejected
+      </td>
+      <td>
+        <a href="/bot/{{id}}/resubmit">
+          <button>
+            <img src="/assets/add_large.png">
+          </button>
+        </a>
+        <a href="/bot/{{id}}/delete">
+          <button>
+            <img src="/assets/delete.png">
+          </button>
+        </a>
+      </td>
+    </tr>
+    {{/each}}
+    {{#each bots}}
+    <tr>
+      <td>
+        <img src="https://cdn.discordapp.com/avatars/{{id}}/{{avatar}}.png?size=512" style="border-radius: 100%;">
+        <a href="/bot/{{id}}">
+          {{username}}
+        </a>
+      </td>
+      <td>
+        {{shortDesc}}
+      </td>
+      <td>
+        {{status}}
+      </td>
+      <td>
+        <a href="/bot/{{id}}/edit">
+          <button>
+            <img src="/assets/edit.png">
+          </button>
+        </a>
+        <a href="/bot/{{id}}/delete">
+          <button>
+            <img src="/assets/delete.png">
+          </button>
+        </a>
+      </td>
+    </tr>
+    {{/each}}
+  </table>
+</body>

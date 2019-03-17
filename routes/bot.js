@@ -23,12 +23,31 @@ class Route {
     next();
   }
 
-  static async ensureBotExists (req, res, next) {
+  static async checkRejected (req, res, next) {
+    this.ensureBotExists(req, res, next, ['bots', 'rejected']);
+  }
+
+  static async onlyRejected (req, res, next) {
+    this.ensureBotExists(req, res, next, ['rejected']);
+  }
+
+  static async ensureBotExists (req, res, next, tables = ['bots']) {
     if (!req.params.id) {
       return res.render('error', { 'error': 'The ID you provided is invalid' });
     }
 
-    const bot = await db.table('bots').get(req.params.id);
+    let bot;
+
+    for (const table of tables) {
+      bot = await db.table(table).get(req.params.id);
+
+      if (bot) {
+        if ('rejected' === table) {
+          bot.rejected = true;
+        }
+        break;
+      }
+    }
 
     if (!bot) {
       return res.render('error', { 'error': 'Bot not found! Did you mistype the ID?' });
@@ -116,9 +135,12 @@ class Route {
       }
 
       res.redirect('/queue');
-
       this.addPoint(currentUser.id, 'rejected');
+
+      const botInfo = await db.table('bots').get(req.bot.id);
       await db.table('bots').get(req.bot.id).delete();
+      await db.table('rejected').insert({ ...botInfo, reason: `Rejected by ${currentUser.user.username}: ${req.body.reason}` });
+
       const botMember = bot.listGuild.members.get(req.bot.id);
 
       if (botMember) {
@@ -190,7 +212,7 @@ class Route {
       bot.createMessage(config.management.listLogChannel, `${currentMember ? currentMember.username : `<@${currentUser}>`} edited ${req.bot.username} (<@${req.bot.id}>)`);
     });
 
-    router.get('/:id/delete', this.ensureBotExists, this.requireSignIn, async (req, res) => {
+    router.get('/:id/delete', this.checkRejected.bind(this), this.requireSignIn, async (req, res) => {
       const currentUser = await req.user.id();
       const currentMember = bot.listGuild.members.get(currentUser);
 
@@ -198,16 +220,40 @@ class Route {
         return res.render('error', { 'error': 'You do not have permission to delete this bot' });
       }
 
-      res.redirect('/');
-
       const botMember = bot.listGuild.members.get(req.bot.id);
 
       if (botMember) {
         await botMember.kick(`Removed by ${currentMember ? currentMember.name : currentUser}`);
       }
 
-      await db.table('bots').get(req.bot.id).delete();
+      if (req.bot.rejected) {
+        await db.table('rejected').get(req.bot.id).delete();
+      } else {
+        await db.table('bots').get(req.bot.id).delete();
+      }
+
+      res.redirect('/');
+
       bot.createMessage(config.management.listLogChannel, `${currentMember ? currentMember.username : `<@${currentUser}>`} deleted ${req.bot.username} (<@${req.bot.id}>)`);
+    });
+
+    router.get('/:id/resubmit', this.onlyRejected.bind(this), this.requireSignIn, async (req, res) => {
+      const currentUser = await req.user.id();
+      const currentMember = bot.listGuild.members.get(currentUser);
+
+      if (currentUser !== req.bot.owner && (!currentMember || !currentMember.roles.some(id => id === config.management.websiteAdminRole))) {
+        return res.render('error', { 'error': 'You do not have permission to resubmit this bot' });
+      }
+
+      delete req.bot.rejected;
+      delete req.bot.reason;
+
+      await db.table('rejected').get(req.bot.id).delete();
+      await db.table('bots').insert(req.bot);
+
+      res.redirect('/mybots');
+
+      bot.createMessage(config.management.listLogChannel, `${currentMember ? currentMember.username : `<@${currentUser}>`} resubmitted ${req.bot.username} (<@${req.bot.id}>)`);
     });
   }
 }

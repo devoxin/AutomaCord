@@ -342,6 +342,55 @@ a, a:visited, a:link, a:active {
   background-color: #2a2c30;
 }
 
+.my-bots {
+  margin-left: 5%;
+  margin-top: 20px;
+  width: 90%;
+  border-spacing: 0px;
+}
+
+td img {
+  height: 50px;
+  margin: 0px 10px 0px 5px;
+}
+
+tr:nth-child(even) {
+  background-color: #202225;
+}
+
+th {
+  text-align: left;
+}
+
+td {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+td:first-child {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+td button {
+  margin: 0px;
+  padding: 0px;
+}
+
+td button {
+  width: 30px;
+  height: 30px;
+}
+
+td button img {
+  padding: 0px !important;
+  margin: 0px !important;
+  width: 20px !important;
+  height: 20px !important;
+  object-fit: contain;
+}
+
 @media only screen and (max-width: 600px) {
   .nav-icon {
     display: inline;

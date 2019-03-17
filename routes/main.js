@@ -108,11 +108,20 @@ class Route {
       for (const boat of bots) {
         const u = bot.users.get(boat.id);
         const newAvatar = u ? (u.avatar || u.defaultAvatar) : boat.avatar; // eslint-disable-line
-        boat.hasAvatar = u ? u.avatar !== null : true;
+        boat.hasAvatar = u ? null !== u.avatar : true;
         boat.avatar = newAvatar;
       }
 
       res.render('all', { bots });
+    });
+
+    router.get('/mybots', this.requireSignIn, async (req, res) => {
+      const id = await req.user.id();
+      const bots = await db.table('bots').filter({ 'owner': id });
+      const rejected = await db.table('rejected').filter({ 'owner': id });
+      bots.forEach(bot => bot.status = bot.approved ? 'Approved' : 'Pending');
+
+      res.render('mybots', { bots, rejected });
     });
   }
 }

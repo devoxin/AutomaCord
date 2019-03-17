@@ -11,4 +11,4 @@ const r = require('rethinkdbdash')({
   });
 })();
 
-module.exports = r({ db: config.rethink.db });
+module.exports = r;
