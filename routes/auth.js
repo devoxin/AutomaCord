@@ -43,7 +43,7 @@ class Route {
       const auth = await snekfetch.post(`${API_URL}/oauth2/token`)
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .set('User-Agent', 'AutomaCord (https://github.com/Devoxin/AutomaCord, v1)')
-        .query({
+        .send({
           client_id: config.discord.clientId,
           client_secret: config.discord.clientSecret,
           grant_type: 'authorization_code',
