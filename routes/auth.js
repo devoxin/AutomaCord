@@ -3,7 +3,7 @@ const express = require('express');
 const snekfetch = require('snekfetch');
 const jwt = require('../utils/jwt');
 
-const BASE_URL = 'https://discordapp.com/api/oauth2/authorize?client_id={clientid}&redirect_uri={redirect}&response_type=code&scope=identify';
+const BASE_URL = 'https://discordapp.com/api/oauth2/authorize?client_id={clientid}&redirect_uri={redirect}&response_type=code&scope=identify&prompt=none';
 const API_URL = 'https://discordapp.com/api/v7';
 
 class Route {
