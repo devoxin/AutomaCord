@@ -24,7 +24,7 @@ class WebServer {
       }
     }));
     this.webServer.set('view engine', '.hbs');
-    this.webServer.use(express.static('views', {
+    this.webServer.use(express.static('assets', {
       maxage: '1d'
     }));
     this.webServer.use(bodyParser.urlencoded({ extended: true }));
