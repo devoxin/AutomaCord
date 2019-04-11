@@ -61,4 +61,3 @@ typings/
 .next
 
 config.json
-rethinkdb_data
