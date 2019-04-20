@@ -46,7 +46,14 @@ class Database {
   }
 
   getQueuedBots () {
-    return r.table('bots').filter({ approved: false }).orderBy('added').run();
+    return r.table('bots').filter({ approved: false }).orderBy('added').run()
+      .then(bots => {
+        for (const b of bots) {
+          b.avatar = `https://cdn.discordapp.com/avatars/${b.id}/${b.avatar}.png?size=512`;
+        }
+
+        return bots;
+      });
   }
 
   getApprovedBots () {
