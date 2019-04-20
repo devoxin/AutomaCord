@@ -49,7 +49,11 @@
         {{shortDesc}}
       </td>
       <td>
-        {{status}}
+        {{#if approved}}
+          Approved
+        {{else}}
+          Pending
+        {{/if}}
       </td>
       <td>
         <a href="/bot/{{id}}/edit">
