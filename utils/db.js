@@ -41,13 +41,12 @@ class Database {
    * @returns {Array<Bot>} A list of bots stored in the database.
    */
   getAllBots () {
-    return r.table('bots').run()
+    return r.table('bots').filter({ approved: true }).run()
       .then(bots => this.patchAvatar(bots));
   }
 
   getQueuedBots () {
-    return r.table('bots').filter({ approved: false }).orderBy('added').run()
-      .then(bots => this.patchAvatar(bots));
+    return r.table('bots').filter({ approved: false }).orderBy('added').run();
   }
 
   getApprovedBots () {
