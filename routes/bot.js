@@ -33,7 +33,7 @@ class Route {
 
   static async ensureBotExists (req, res, next, tables = ['bots']) {
     if (!req.params.id) {
-      return res.render('error', { 'error': 'The ID you provided is invalid' });
+      return res.render('error', { error: 'The ID you provided is invalid' });
     }
 
     let bot;
@@ -42,7 +42,7 @@ class Route {
       bot = await db.table(table).get(req.params.id);
 
       if (bot) {
-        if ('rejected' === table) {
+        if (table === 'rejected') {
           bot.rejected = true;
         }
         break;
@@ -50,7 +50,7 @@ class Route {
     }
 
     if (!bot) {
-      return res.render('error', { 'error': 'Bot not found! Did you mistype the ID?' });
+      return res.render('error', { error: 'Bot not found! Did you mistype the ID?' });
     }
 
     req.bot = bot;
@@ -67,11 +67,6 @@ class Route {
       id: userId,
       [type]: points
     }, { conflict: 'update' });
-  }
-
-  static async getAvatar (bot, id) {
-    const user = await bot.fetchUser(id) || {};
-    return user.avatar || '';
   }
 
   static async getAdditionalOwners (bot, ids) {
@@ -102,8 +97,8 @@ class Route {
       const botOwner = await bot.fetchUser(botInfo.owner)
         || { username: 'Unknown User', discriminator: '0000', id: botInfo.owner };
 
-      botInfo.avatar = await this.getAvatar(bot, botInfo.id);
-      botInfo.longDesc = xss(marked(botInfo.longDesc), { css: false, whiteList: { 'style': [], 'iframe': ['src', 'class', 'id'], ...xss.whiteList } });
+      botInfo.avatar = bot.getAvatarFor(botInfo.id, botInfo.discriminator);
+      botInfo.longDesc = xss(marked(botInfo.longDesc), { css: false, whiteList: { style: [], iframe: ['src', 'class', 'id'], ...xss.whiteList } });
       botInfo.invite = botInfo.invite || `https://discordapp.com/oauth2/authorize?client_id=${botInfo.id}&scope=bot`;
       botInfo.owner = botOwner;
       botInfo.isWebAdmin = currentUser && currentUser.roles.some(id => id === config.management.websiteAdminRole);
@@ -117,7 +112,7 @@ class Route {
       const currentUser = bot.listGuild.members.get(await req.user.id());
 
       if (!currentUser || !currentUser.roles.some(id => id === config.management.websiteAdminRole)) {
-        return res.render('error', { 'error': 'You do not have permission to do that' });
+        return res.render('error', { error: 'You do not have permission to do that' });
       }
 
       res.render('reject', { username: req.bot.username });
@@ -125,20 +120,20 @@ class Route {
 
     router.post('/:id/reject', this.ensureBotExists, this.requireSignIn, async (req, res) => {
       if (!req.body.reason) {
-        return res.render('error', { 'error': 'You need to provide a reason for rejection' });
+        return res.render('error', { error: 'You need to provide a reason for rejection' });
       }
 
       const currentUser = bot.listGuild.members.get(await req.user.id());
 
       if (!currentUser || !currentUser.roles.some(id => id === config.management.websiteAdminRole)) {
-        return res.render('error', { 'error': 'You do not have permission to do that' });
+        return res.render('error', { error: 'You do not have permission to do that' });
       }
 
       res.redirect('/queue');
       this.addPoint(currentUser.id, 'rejected');
 
-      const botInfo = await db.table('bots').get(req.bot.id);
-      await db.table('bots').get(req.bot.id).delete();
+      const botInfo = await db.getBot(req.bot.id);
+      await db.deleteBot(req.bot.id);
       await db.table('rejected').insert({ ...botInfo, reason: `Rejected by ${currentUser.user.username}: ${req.body.reason}` });
 
       const botMember = bot.listGuild.members.get(req.bot.id);
@@ -154,7 +149,7 @@ class Route {
       const currentUser = bot.listGuild.members.get(await req.user.id());
 
       if (!currentUser || !currentUser.roles.some(id => id === config.management.websiteAdminRole)) {
-        return res.render('error', { 'error': 'You do not have permission to do that' });
+        return res.render('error', { error: 'You do not have permission to do that' });
       }
 
       res.redirect('/queue');
@@ -178,10 +173,10 @@ class Route {
       const currentMember = bot.listGuild.members.get(currentUser);
 
       if (currentUser !== req.bot.owner && (!currentMember || !currentMember.roles.some(id => id === config.management.websiteAdminRole))) {
-        return res.render('error', { 'error': 'You do not have permission to edit this bot' });
+        return res.render('error', { error: 'You do not have permission to edit this bot' });
       }
 
-      res.render('add', { 'editing': true, ...req.bot });
+      res.render('add', { editing: true, ...req.bot });
     });
 
     router.post('/:id/edit', this.ensureBotExists, this.requireSignIn, async (req, res) => {
@@ -195,7 +190,7 @@ class Route {
       const currentMember = bot.listGuild.members.get(currentUser);
 
       if (currentUser !== req.bot.owner && (!currentMember || !currentMember.roles.some(id => id === config.management.websiteAdminRole))) {
-        return res.render('error', { 'error': 'You do not have permission to edit this bot' });
+        return res.render('error', { error: 'You do not have permission to edit this bot' });
       }
 
       const { prefix, shortDesc, longDesc, inviteUrl, owners } = req.body;
@@ -217,7 +212,7 @@ class Route {
       const currentMember = bot.listGuild.members.get(currentUser);
 
       if (currentUser !== req.bot.owner && (!currentMember || !currentMember.roles.some(id => id === config.management.websiteAdminRole))) {
-        return res.render('error', { 'error': 'You do not have permission to delete this bot' });
+        return res.render('error', { error: 'You do not have permission to delete this bot' });
       }
 
       const botMember = bot.listGuild.members.get(req.bot.id);
@@ -242,7 +237,7 @@ class Route {
       const currentMember = bot.listGuild.members.get(currentUser);
 
       if (currentUser !== req.bot.owner && (!currentMember || !currentMember.roles.some(id => id === config.management.websiteAdminRole))) {
-        return res.render('error', { 'error': 'You do not have permission to resubmit this bot' });
+        return res.render('error', { error: 'You do not have permission to resubmit this bot' });
       }
 
       delete req.bot.rejected;

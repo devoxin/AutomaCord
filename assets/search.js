@@ -1,13 +1,13 @@
 async function searchBots (e) {
   document.querySelector('.search-bar input').style.color = 'white';
 
-  if (13 !== e.keyCode) {
+  if (e.keyCode !== 13) {
     return;
   }
 
   const { value: query } = document.querySelector('.search-bar input');
 
-  if (0 === query.length || !/^[a-zA-Z0-9 ]+$/.test(query)) {
+  if (query.length === 0 || !/^[a-zA-Z0-9 ]+$/.test(query)) {
     return;
   }
 
@@ -17,7 +17,7 @@ async function searchBots (e) {
   const results = await fetch(`/api/search?query=${query}`)
     .then(r => r.json());
 
-  if (0 === results.length) {
+  if (results.length === 0) {
     document.querySelector('.search-bar input').style.color = 'red';
   } else {
     for (const bot of results) {

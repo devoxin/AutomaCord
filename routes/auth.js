@@ -8,7 +8,7 @@ const API_URL = 'https://discordapp.com/api/v7';
 
 class Route {
   static getRedirectURI () {
-    if (80 !== config.web.port && config.web.appendPortToRedirectURI) {
+    if (config.web.port !== 80 && config.web.appendPortToRedirectURI) {
       return `${config.web.domain}:${config.web.port}/auth/handshake`;
     } else {
       return `${config.web.domain}/auth/handshake`;
@@ -37,7 +37,7 @@ class Route {
       const { code } = req.query;
 
       if (!code) {
-        return res.render('error', { 'error': 'Invalid code' });
+        return res.render('error', { error: 'Invalid code' });
       }
 
       const auth = await snekfetch.post(`${API_URL}/oauth2/token`)
@@ -54,7 +54,7 @@ class Route {
         .catch(() => null);
 
       if (!auth) {
-        return res.render('error', { 'error': 'Something went wrong during the handshake with Discord' });
+        return res.render('error', { error: 'Something went wrong during the handshake with Discord' });
       }
 
       const currentUser = await snekfetch.get(`${API_URL}/users/@me`)
@@ -62,18 +62,13 @@ class Route {
         .catch(() => null);
 
       if (!currentUser) {
-        return res.render('error', { 'error': 'Something went wrong during the handshake with Discord' });
+        return res.render('error', { error: 'Something went wrong during the handshake with Discord' });
       }
 
-      const webToken = await jwt.sign(
-        {
-          id: currentUser.body.id,
-        },
-        config.web.jwtSeed
-      );
+      const webToken = await jwt.sign({ id: currentUser.body.id, }, config.web.jwtSeed);
 
       if (!webToken) {
-        return res.render('error', { 'error': 'Something went wrong during the handshake with Discord' });
+        return res.render('error', { error: 'Something went wrong during the handshake with Discord' });
       }
 
       res

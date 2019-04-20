@@ -3,7 +3,7 @@ const db = require('../utils/db');
 const validate = require('../utils/payloadValidator');
 const express = require('express');
 
-const rejectAllFields = ['invite', 'prefix', 'longDesc', 'discriminator', 'owner', 'additionalOwners', 'approved', 'added'];
+// const rejectAllFields = ['invite', 'prefix', 'longDesc', 'discriminator', 'owner', 'additionalOwners', 'approved', 'added'];
 
 class Route {
   static async requireSignIn (req, res, next) {
@@ -14,35 +14,23 @@ class Route {
     next();
   }
 
-  static async getAvatar (bot, id) {
-    const user = await bot.fetchUser(id) || {};
-    return user.avatar || '';
-  }
-
   static configure (server, bot) {
     const router = express.Router();
     server.use('/', router);
 
     router.get('/', async (req, res) => {
-      const data = await db.table('bots').filter({ 'approved': true });
+      const data = await db.getApprovedBots();
 
       for (const boat of data) {
         boat.seed = Math.random();
-        boat.avatar = await this.getAvatar(bot, boat.id);
       }
 
       const bots = data.sort((a, b) => a.seed - b.seed).slice(0, 15);
-
       res.render('index', { bots });
     });
 
     router.get('/queue', async (req, res) => {
-      const bots = await db.table('bots').filter({ 'approved': false }).orderBy('added');
-
-      for (const boat of bots) {
-        boat.avatar = await this.getAvatar(bot, boat.id);
-      }
-
+      const bots = await db.getQueuedBots();
       res.render('queue', { bots });
     });
 
@@ -61,21 +49,21 @@ class Route {
       const user = await bot.fetchUser(clientId);
 
       if (!user) {
-        return res.render('error', { 'error': 'Unable to find information related to the clientId', shouldRetry: true });
+        return res.render('error', { error: 'Unable to find information related to the clientId', shouldRetry: true });
       }
 
       if (await db.table('bots').get(clientId).coerceTo('bool')) {
-        return res.render('error', { 'error': `${user.username} is already listed!` });
+        return res.render('error', { error: `${user.username} is already listed!` });
       }
 
       if (!user.bot) {
-        return res.render('error', { 'error': 'The specified clientId is not associated with a bot', shouldRetry: true });
+        return res.render('error', { error: 'The specified clientId is not associated with a bot', shouldRetry: true });
       }
 
       const owner = bot.listGuild.members.get(await req.user.id());
 
       if (!owner) {
-        return res.render('error', { 'error': 'You need to be in the server to add bots' });
+        return res.render('error', { error: 'You need to be in the server to add bots' });
       }
 
       await db.table('bots').insert({
@@ -85,7 +73,6 @@ class Route {
         shortDesc,
         longDesc,
         username: user.username,
-        avatar: user.avatar,
         discriminator: user.discriminator,
         owner: owner.id,
         additionalOwners: owners.split(' ').filter(e => !!e),
@@ -103,23 +90,13 @@ class Route {
     });
 
     router.get('/all', async (req, res) => {
-      const bots = await db.table('bots').without(rejectAllFields);
-
-      for (const boat of bots) {
-        const u = bot.users.get(boat.id);
-        const newAvatar = u ? (u.avatar || u.defaultAvatar) : boat.avatar; // eslint-disable-line
-        boat.hasAvatar = u ? null !== u.avatar : true;
-        boat.avatar = newAvatar;
-      }
-
+      const bots = await db.getAllBots();
       res.render('all', { bots });
     });
 
     router.get('/mybots', this.requireSignIn, async (req, res) => {
       const id = await req.user.id();
-      const bots = await db.table('bots').filter({ 'owner': id });
-      const rejected = await db.table('rejected').filter({ 'owner': id });
-      bots.forEach(bot => bot.status = bot.approved ? 'Approved' : 'Pending');
+      const { bots, rejected } = await db.getBotsOwnedBy(id, true);
 
       res.render('mybots', { bots, rejected });
     });

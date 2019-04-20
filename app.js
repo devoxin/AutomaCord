@@ -12,8 +12,9 @@ class Automa extends Client {
     };
 
     super(token, options);
-
     this.webServer = new WebServer(this);
+
+    db.configure(this);
   }
 
   async fetchUser (userId, fetch = true) {
@@ -40,6 +41,25 @@ class Automa extends Client {
     return this.guilds.get(config.management.listGuild);
   }
 
+  /**
+   * Checks the cache for the given user ID, and returns the effective avatar URL, otherwise default.
+   * @param {String} userId The ID of the user to get the avatar for.
+   * @param {String?} discriminator The discriminator, if applicable.
+   * @param {Number} size The desired size of the avatar.
+   * @returns {String} The avatar URl for the user.
+   */
+  getAvatarFor (userId, discriminator = null, size = 512) {
+    if (this.users.has(userId)) {
+      return this.users.get(userId).dynamicAvatarURL('png', size);
+    }
+
+    if (discriminator) {
+      return `https://cdn.discordapp.com/embed/avatars/${discriminator % 5}.png`;
+    }
+
+    return 'https://cdn.discordapp.com/embed/avatars/1.png';
+  }
+
   start () {
     this.connect();
 
@@ -58,12 +78,12 @@ bot.on('messageCreate', async (msg) => {
 
   const [command, ...args] = msg.content.slice(config.bot.prefix.length).split(' ');
 
-  if ('ping' === command) {
+  if (command === 'ping') {
     msg.channel.createMessage('ponk :ping_pong:');
   }
 
-  if ('queue' === command) {
-    const bots = await db.table('bots').filter({ 'approved': false }).orderBy('added').limit(10);
+  if (command === 'queue') {
+    const bots = await db.table('bots').filter({ approved: false }).orderBy('added').limit(10);
     msg.channel.createMessage({
       embed: {
         title: `First ${bots.length} bots in the queue`,
@@ -72,8 +92,8 @@ bot.on('messageCreate', async (msg) => {
     });
   }
 
-  if ('owner' === command) {
-    if (0 === msg.mentions.length) {
+  if (command === 'owner') {
+    if (msg.mentions.length === 0) {
       return msg.channel.createMessage('You need to mention a bot.');
     }
 
@@ -87,14 +107,14 @@ bot.on('messageCreate', async (msg) => {
     const user = bot.users.get(botOwnerId);
 
     if (!user) {
-      return msg.channel.createMessage('Unknown user.');
+      return msg.channel.createMessage(`${botOwnerId} (User not cached/in server.)`);
     }
 
     msg.channel.createMessage(`${user.username}#${user.discriminator} (${user.id})`);
   }
 
-  if ('eval' === command) {
-    if ('180093157554388993' !== msg.author.id) {
+  if (command === 'eval') {
+    if (msg.author.id !== '180093157554388993') {
       return;
     }
 
