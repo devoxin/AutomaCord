@@ -152,6 +152,12 @@ class Route {
         return res.render('error', { error: 'You do not have permission to do that' });
       }
 
+      const botMember = bot.listGuild.members.get(req.bot.id);
+
+      if (!botMember) {
+        return res.render('error', { error: 'The bot needs to be added to AutomaCord\'s server before it can be approved.' });
+      }
+
       res.redirect('/queue');
 
       this.addPoint(currentUser.id, 'approved');
