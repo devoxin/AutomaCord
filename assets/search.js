@@ -26,7 +26,7 @@ async function searchBots (e) {
       card.setAttribute('onclick', `window.location.href = '/bot/${bot.id}'`);
 
       const icon = document.createElement('img');
-      icon.src = `https://cdn.discordapp.com/avatars/${bot.id}/${bot.avatar}.png?size=512`;
+      icon.src = bot.avatar;
 
       const name = document.createElement('span');
       const description = document.createElement('span');
