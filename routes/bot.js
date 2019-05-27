@@ -139,7 +139,11 @@ class Route {
       const botMember = bot.listGuild.members.get(req.bot.id);
 
       if (botMember) {
-        await botMember.kick(`Rejected by ${currentUser.username} for ${req.body.reason}`);
+        try {
+          await botMember.kick(`Rejected by ${currentUser.username} for ${req.body.reason}`);
+        } catch(e) {
+          console.error('Failed to kick while rejecting. The bot may not have the correct permissions.');
+        }
       }
 
       bot.createMessage(config.management.listLogChannel, `${currentUser.username} rejected ${req.bot.username} (<@${req.bot.id}>) for **${req.body.reason}**`);
@@ -224,7 +228,11 @@ class Route {
       const botMember = bot.listGuild.members.get(req.bot.id);
 
       if (botMember) {
-        await botMember.kick(`Removed by ${currentMember ? currentMember.name : currentUser}`);
+        try {
+          await botMember.kick(`Removed by ${currentMember ? currentMember.name : currentUser}`);
+        } catch(e) {
+          console.error('Failed to kick while deleting. The bot may not have the correct permissions.');
+        }
       }
 
       if (req.bot.rejected) {
