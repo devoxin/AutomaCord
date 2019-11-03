@@ -25,7 +25,7 @@
     "express": "^4.16.3",
     "express-handlebars": "^3.0.0",
     "jsonwebtoken": "^8.3.0",
-    "marked": "^0.5.0",
+    "marked": "^0.6.1",
     "rethinkdbdash": "^2.3.31",
     "snekfetch": "^4.0.4",
     "xss": "^1.0.3"
