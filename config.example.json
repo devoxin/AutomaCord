@@ -1,6 +1,6 @@
 {
     "bot": {
-        "token": "",
+        "token": "super_secret_token",
         "prefix": "!"
     },
     "rethink": {
